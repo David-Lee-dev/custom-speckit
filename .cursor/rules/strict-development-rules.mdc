@@ -7,7 +7,7 @@ description: "Strict development workflow rules: approval-based workflow (Pre-fl
 
 ## 0. Contract & Approval
 
-**REQUIRED APPROVAL KEYWORDS**: "개발해" | "진행해"
+**REQUIRED APPROVAL KEYWORDS**: "go"
 
 **RULES**:
 - Do NOTHING until you receive explicit approval with keywords above

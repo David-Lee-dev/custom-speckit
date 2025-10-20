@@ -1,3 +1,17 @@
+---
+alwaysApply: false
+description: "Custom Speckit workflow rules for version-controlled specifications with delta-based change management. Single source of truth (specs/spec.md), delta approval process, features history tracking, and constitution compliance enforcement."
+tags:
+  - speckit
+  - specify
+  - plan
+  - tasks
+  - implement
+  - delta
+  - specification
+  - workflow
+---
+
 # Custom Speckit Workflow Rules
 
 **CRITICAL**: This project uses a customized Speckit workflow with version-controlled specifications and delta-based change management. You MUST follow these rules strictly when working with specifications, plans, and tasks.
