@@ -16,14 +16,14 @@ You **MUST** consider the user input before proceeding (if not empty).
    a. Run `.specify/scripts/bash/get-version.sh --json --auto` to get project version.
    b. Run `.specify/scripts/bash/compare-specs.sh --json` to get branch name.
    c. Get current date in YYYY-MM-DD format.
-   d. Determine feature directory: `features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+   d. Determine feature directory: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
    e. Verify that plan.md exists in this directory (required).
    
    All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load design documents**: 
    - **From main spec** (`.specify/specs/spec.md`): User stories with priorities, requirements
-   - **From feature directory** (`features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`):
+   - **From feature directory** (`.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`):
      * **Required**: plan.md (tech stack, libraries, structure)
      * **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
    - **If delta exists** (`.specify/.deltas/{BRANCH}/delta-spec.md`): Load to understand what's changing in this feature
@@ -52,7 +52,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Dependencies section showing story completion order
    - Parallel execution examples per story
    - Implementation strategy section (MVP first, incremental delivery)
-   - **Save to**: `features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/tasks.md`
+   - **Save to**: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/tasks.md`
 
 5. **Report**: Output path to generated tasks.md and summary:
    - Total task count

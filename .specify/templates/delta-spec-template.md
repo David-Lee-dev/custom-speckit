@@ -1,7 +1,7 @@
 # Delta Specification: [FEATURE NAME]
 
 **Branch**: `[###-feature-name]`  
-**Base Spec**: `specs/spec.md` (last modified: [DATE])  
+**Base Spec**: `.specify/specs/spec.md` (last modified: [DATE])  
 **Delta Created**: [DATE]  
 **Status**: PENDING_REVIEW
 
@@ -304,7 +304,7 @@
 [Notes about approval decision]
 
 **Next Steps**:
-- [ ] Run `/speckit.approve-delta` to merge changes to specs/spec.md
+- [ ] Run `/speckit.approve-delta` to merge changes to .specify/specs/spec.md
 - [ ] Run `/speckit.plan` to generate implementation plan
 - [ ] Run `/speckit.tasks` to break down into tasks
 

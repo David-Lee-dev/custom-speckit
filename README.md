@@ -366,8 +366,8 @@ vim .specify/specs/CHANGELOG.md
 | 명령어 | 단계 | 설명 | 입력 | 출력 |
 |--------|------|------|------|------|
 | `/speckit.specify` | 1️⃣ | 명세서 생성/수정 | 자연어 요구사항 | `.specify/specs/spec.md` 또는 `.specify/.deltas/{branch}/` |
-| `/speckit.plan` | 2️⃣ | 구현 계획 생성 | (자동) | `features/{version}/{date}_{branch}/plan.md` |
-| `/speckit.tasks` | 3️⃣ | 작업 목록 생성 | (자동) | `features/{version}/{date}_{branch}/tasks.md` |
+| `/speckit.plan` | 2️⃣ | 구현 계획 생성 | (자동) | `.specify/features/{version}/{date}_{branch}/plan.md` |
+| `/speckit.tasks` | 3️⃣ | 작업 목록 생성 | (자동) | `.specify/features/{version}/{date}_{branch}/tasks.md` |
 | `/speckit.implement` | 4️⃣ | 구현 실행 | (자동) | 소스 코드, 테스트 |
 
 ### Delta 관리 명령어
@@ -404,7 +404,7 @@ specify → review-delta → approve-delta → plan → tasks → implement
 |--------|-------------------|----------------|
 | **Spec Location** | `specs/{branch}/spec.md` | `.specify/specs/spec.md` (single file) |
 | **Change Management** | Create new spec per feature | Delta → Review → Approve |
-| **Plan/Tasks Location** | `specs/{branch}/` | `features/{version}/{date}_{branch}/` |
+| **Plan/Tasks Location** | `specs/{branch}/` | `.specify/features/{version}/{date}_{branch}/` |
 | **Version Tracking** | Branch number only | Version + Date + Branch |
 | **Change Review** | None | Built-in review workflow |
 | **Spec Duplication** | High (per feature) | None (single source) |
@@ -417,7 +417,7 @@ See [`.cursor/rules/custom-speckit-workflow.mdc`](.cursor/rules/custom-speckit-w
 
 1. ✅ **Only one spec file**: `.specify/specs/spec.md` is the single source of truth
 2. ✅ **Delta approval required**: Changes must be approved via `/speckit.approve-delta`
-3. ✅ **Features directory**: Save plan.md and tasks.md to `features/{version}/{date}_{branch}/`
+3. ✅ **Features directory**: Save plan.md and tasks.md to `.specify/features/{version}/{date}_{branch}/`
 4. ✅ **Constitution compliance**: All changes must comply with `.specify/memory/constitution.md`
 5. ❌ **Never create**: `specs/{branch}/spec.md` (old pattern)
 6. ❌ **Never modify directly**: `.specify/specs/spec.md` (use delta workflow)
@@ -517,7 +517,7 @@ Define your project's core principles in `.specify/memory/constitution.md`. All 
 
 ```bash
 # Delta 승인 후
-git add .specify/specs/spec.md features/
+git add .specify/specs/spec.md .specify/features/
 git commit -m "feat(auth): add user authentication spec
 
 - Add login, signup, password reset user stories

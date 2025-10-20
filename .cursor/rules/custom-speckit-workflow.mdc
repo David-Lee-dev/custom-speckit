@@ -38,7 +38,7 @@ tags:
   - `plan.md` - Implementation plan for this feature
   - `tasks.md` - Task breakdown for this feature
   - Optional: `research.md`, `data-model.md`, `contracts/`, `quickstart.md`
-- Format: `features/v1.0.0/2025-01-20_001-feature-name/`
+- Format: `.specify/features/v1.0.0/2025-01-20_001-feature-name/`
 - These are **permanent** - commit to version control
 
 ---
@@ -104,7 +104,7 @@ tags:
 
 3. **NEVER save plan.md or tasks.md to `.specify/specs/` directory**
    - They belong in `.specify/features/{version}/{date}_{branch}/`
-   - Example: `features/v1.0.0/2025-01-20_001-auth/plan.md`
+   - Example: `.specify/features/v1.0.0/2025-01-20_001-auth/plan.md`
 
 4. **NEVER skip delta review for existing projects**
    - If `.specify/specs/spec.md` exists, `/speckit.specify` creates delta
@@ -243,9 +243,9 @@ When approved (`/speckit.approve-delta`):
 Format: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
 
 Examples:
-- `features/v1.0.0/2025-01-20_001-user-auth/`
-- `features/v1.1.0/2025-02-15_002-payment/`
-- `features/v2.0.0/2025-03-01_003-api-redesign/`
+- `.specify/features/v1.0.0/2025-01-20_001-user-auth/`
+- `.specify/features/v1.1.0/2025-02-15_002-payment/`
+- `.specify/features/v2.0.0/2025-03-01_003-api-redesign/`
 
 Components:
 - **VERSION**: From git tag or package.json/pyproject.toml
@@ -289,8 +289,8 @@ Every command MUST verify compliance with `.specify/memory/constitution.md`:
 2. **Edit deltas manually** if AI-generated changes need refinement
 3. **Keep constitution.md updated** to enforce project standards
 4. **Use semantic versioning** in git tags
-5. **Commit features/** to preserve history
-6. **Add .deltas/ to .gitignore**
+5. **Commit .specify/features/** to preserve history
+6. **Add .specify/.deltas/ to .gitignore**
 
 ---
 
@@ -303,7 +303,7 @@ Every command MUST verify compliance with `.specify/memory/constitution.md`:
 
 ✅ CORRECT:
    First time: /speckit.specify → .specify/specs/spec.md
-   Updates: /speckit.specify → .deltas/001-feature/delta-spec.md
+   Updates: /speckit.specify → .specify/.deltas/001-feature/delta-spec.md
 ```
 
 ### Mistake 2: Saving plan.md to specs/
@@ -312,17 +312,17 @@ Every command MUST verify compliance with `.specify/memory/constitution.md`:
    /speckit.plan → specs/001-feature/plan.md
 
 ✅ CORRECT:
-   /speckit.plan → features/v1.0.0/2025-01-20_001-feature/plan.md
+   /speckit.plan → .specify/features/v1.0.0/2025-01-20_001-feature/plan.md
 ```
 
 ### Mistake 3: Skipping Delta Approval
 ```
 ❌ WRONG:
-   /speckit.specify → .deltas/002-auth/delta-spec.md
+   /speckit.specify → .specify/.deltas/002-auth/delta-spec.md
    /speckit.plan ← ERROR: delta not approved
 
 ✅ CORRECT:
-   /speckit.specify → .deltas/002-auth/delta-spec.md
+   /speckit.specify → .specify/.deltas/002-auth/delta-spec.md
    /speckit.approve-delta → .specify/specs/spec.md updated
    /speckit.plan ← OK
 ```
@@ -350,18 +350,18 @@ Every command MUST verify compliance with `.specify/memory/constitution.md`:
     ↓
 /speckit.plan
     ↓
-features/v1.0.0/2025-01-20_001-feature/plan.md
+.specify/features/v1.0.0/2025-01-20_001-feature/plan.md
     ↓
 /speckit.tasks
     ↓
-features/v1.0.0/2025-01-20_001-feature/tasks.md
+.specify/features/v1.0.0/2025-01-20_001-feature/tasks.md
 
 
 [Existing Project]
     ↓
 /speckit.specify
     ↓
-.deltas/002-feature/delta-spec.md ← Temporary changes
+.specify/.deltas/002-feature/delta-spec.md ← Temporary changes
     ↓
 /speckit.review-delta (optional)
     ↓
@@ -370,15 +370,15 @@ Manual review/editing
 /speckit.approve-delta
     ↓
 .specify/specs/spec.md ← Updated (delta merged)
-.deltas/002-feature/ ← Archived/deleted
+.specify/.deltas/002-feature/ ← Archived/deleted
     ↓
 /speckit.plan
     ↓
-features/v1.1.0/2025-01-22_002-feature/plan.md
+.specify/features/v1.1.0/2025-01-22_002-feature/plan.md
     ↓
 /speckit.tasks
     ↓
-features/v1.1.0/2025-01-22_002-feature/tasks.md
+.specify/features/v1.1.0/2025-01-22_002-feature/tasks.md
 ```
 
 ---
@@ -426,13 +426,13 @@ specs/
   CHANGELOG.md ← Change history
   .backups/ ← Auto-generated backups
 
-.deltas/ ← TEMPORARY (add to .gitignore)
+.specify/.deltas/ ← TEMPORARY (add to .gitignore)
   {branch}/
     delta-spec.md
     changes-summary.md
     review-checklist.md
 
-features/ ← PERMANENT (commit to git)
+.specify/features/ ← PERMANENT (commit to git)
   {version}/
     {date}_{branch}/
       plan.md

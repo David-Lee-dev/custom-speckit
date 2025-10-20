@@ -108,7 +108,7 @@ rm -rf {DELTA_DIR}
 
 Create/append to rejection log for audit purposes:
 
-**File**: `specs/.delta-rejections.log`
+**File**: `.specify/specs/.delta-rejections.log`
 
 **Format**:
 ```
@@ -173,12 +173,12 @@ Provide comprehensive completion report:
 You can:
 
 1. **Start fresh**: Run `/speckit.specify` with refined requirements
-2. **Review rejection**: {If archived: Check `specs/.deltas-archive/{timestamp}_{branch}_REJECTED/`}
+2. **Review rejection**: {If archived: Check `.specify/specs/.deltas-archive/{timestamp}_{branch}_REJECTED/`}
 3. **Continue without changes**: Proceed with existing spec
 
 ## Notes
 
-- The rejection has been logged in `specs/.delta-rejections.log`
+- The rejection has been logged in `.specify/specs/.delta-rejections.log`
 - Main specification remains in its original state
 - {If not archived: This rejection cannot be recovered}
 
