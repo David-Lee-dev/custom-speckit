@@ -12,11 +12,21 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/bash/check-prerequisites.sh --json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: 
+   a. Run `.specify/scripts/bash/get-version.sh --json --auto` to get project version.
+   b. Run `.specify/scripts/bash/compare-specs.sh --json` to get branch name.
+   c. Get current date in YYYY-MM-DD format.
+   d. Determine feature directory: `features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+   e. Verify that plan.md exists in this directory (required).
+   
+   All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
-2. **Load design documents**: Read from FEATURE_DIR:
-   - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
-   - **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
+2. **Load design documents**: 
+   - **From main spec** (`specs/spec.md`): User stories with priorities, requirements
+   - **From feature directory** (`features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`):
+     * **Required**: plan.md (tech stack, libraries, structure)
+     * **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
+   - **If delta exists** (`.deltas/{BRANCH}/delta-spec.md`): Load to understand what's changing in this feature
    - Note: Not all projects have all documents. Generate tasks based on what's available.
 
 3. **Execute task generation workflow**:
@@ -30,7 +40,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Create parallel execution examples per user story
    - Validate task completeness (each user story has all needed tasks, independently testable)
 
-4. **Generate tasks.md**: Use `.specify.specify/templates/tasks-template.md` as structure, fill with:
+4. **Generate tasks.md**: Use `.specify/templates/tasks-template.md` as structure, fill with:
    - Correct feature name from plan.md
    - Phase 1: Setup tasks (project initialization)
    - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
@@ -42,6 +52,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Dependencies section showing story completion order
    - Parallel execution examples per story
    - Implementation strategy section (MVP first, incremental delivery)
+   - **Save to**: `features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/tasks.md`
 
 5. **Report**: Output path to generated tasks.md and summary:
    - Total task count

@@ -16,6 +16,19 @@ The text the user typed after `/speckit.specify` in the triggering message **is*
 
 Given that feature description, do this:
 
+**STEP 0: Check for Existing Specification**
+
+Run `.specify/scripts/bash/compare-specs.sh --json` from repo root and parse its JSON output for HAS_EXISTING_SPEC, SPEC_PATH, DELTA_DIR, and CURRENT_BRANCH.
+
+- **If HAS_EXISTING_SPEC is false**: Follow the **New Project Workflow** (Steps 1-7 below)
+- **If HAS_EXISTING_SPEC is true**: Follow the **Delta Workflow** (see Delta Workflow section after step 7)
+
+---
+
+## New Project Workflow
+
+This workflow is used when `specs/spec.md` does not exist (first time using speckit).
+
 1. **Generate a concise short name** (2-4 words) for the branch:
    - Analyze the feature description and extract the most meaningful keywords
    - Create a 2-4 word short name that captures the essence of the feature
@@ -29,6 +42,8 @@ Given that feature description, do this:
      - "Fix payment processing timeout bug" → "fix-payment-timeout"
 
 2. Run the script `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS"` from repo root **with the short-name argument** and parse its JSON output for BRANCH_NAME and SPEC_FILE. All file paths must be absolute.
+   
+   **NOTE**: For new projects, this creates the spec at `specs/{branch}/spec.md`. After completion, you should move it to `specs/spec.md` as the single source of truth.
 
    **IMPORTANT**:
 
@@ -227,3 +242,171 @@ Success criteria must be:
 - "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
 - "React components render efficiently" (framework-specific)
 - "Redis cache hit rate above 80%" (technology-specific)
+
+---
+
+## Delta Workflow
+
+This workflow is used when `specs/spec.md` already exists (modifying existing project).
+
+**Purpose**: Generate a delta specification that captures ONLY the changes (additions, modifications, deletions) to be reviewed and approved before merging into the main spec.
+
+### Delta Generation Steps
+
+1. **Load existing specification**:
+   - Read `specs/spec.md` (path from compare-specs.sh output)
+   - Parse current user stories, requirements, and structure
+   - Note the last modification time
+
+2. **Analyze user requirements**:
+   - Parse the user's feature description from $ARGUMENTS
+   - Identify what's being requested:
+     * New features/user stories
+     * Changes to existing requirements
+     * Removal of existing features
+   
+3. **Generate change analysis**:
+   - **Additions**: New user stories, requirements, or sections not in existing spec
+   - **Modifications**: Changes to existing user stories or requirements
+   - **Deletions**: Explicitly requested removals or deprecations
+   
+4. **Create delta directory**:
+   - Create `.deltas/{CURRENT_BRANCH}/` directory
+   - Branch name comes from compare-specs.sh output
+
+5. **Generate delta-spec.md**:
+   - Load `.specify/templates/delta-spec-template.md`
+   - Fill in the template with:
+     * Change summary (high-level overview)
+     * Change statistics (counts of additions/modifications/deletions)
+     * Detailed breakdown of each change
+     * Impact analysis (affected components, risks, effort)
+     * Constitution compliance check
+   
+   **For each addition**:
+   - Write new requirement in same format as main spec
+   - Include rationale explaining why it's needed
+   - Reference user request
+   
+   **For each modification**:
+   - Show "Before" (quote from existing spec)
+   - Show "After" (proposed new text)
+   - Explain rationale for change
+   - Analyze impact on existing implementations
+   
+   **For each deletion**:
+   - Quote what's being removed
+   - Explain why it's no longer needed
+   - Provide migration path for existing implementations
+
+6. **Generate changes-summary.md**:
+   - Create `.deltas/{CURRENT_BRANCH}/changes-summary.md`
+   - Human-readable summary of changes
+   - Format:
+     ```markdown
+     # Change Summary: {Feature Name}
+     
+     ## Overview
+     [2-3 sentence description of what's changing]
+     
+     ## Key Changes
+     - ✅ Added: {count} new requirements
+     - 🔄 Modified: {count} existing requirements  
+     - ❌ Removed: {count} requirements
+     
+     ## Highlights
+     - {Most significant change 1}
+     - {Most significant change 2}
+     - {Most significant change 3}
+     
+     ## Next Steps
+     1. Review delta at `.deltas/{branch}/delta-spec.md`
+     2. Run `/speckit.review-delta` for detailed analysis
+     3. Manually edit delta if needed
+     4. Run `/speckit.approve-delta` to merge or `/speckit.reject-delta` to discard
+     ```
+
+7. **Generate review checklist**:
+   - Create `.deltas/{CURRENT_BRANCH}/review-checklist.md`
+   - Pre-filled checklist for reviewers
+   - Format:
+     ```markdown
+     # Review Checklist: {Feature Name}
+     
+     **Branch**: {branch-name}
+     **Delta Created**: {timestamp}
+     **Reviewer**: _[To be filled]_
+     
+     ## Pre-Review
+     - [ ] Read the changes-summary.md
+     - [ ] Understand the user's original request
+     - [ ] Review existing spec.md for context
+     
+     ## Content Review
+     - [ ] All additions are necessary and justified
+     - [ ] All modifications preserve existing functionality (unless intentional breaking change)
+     - [ ] All deletions have clear migration paths
+     - [ ] No conflicts with constitution.md
+     - [ ] No implementation details in spec
+     
+     ## Impact Review
+     - [ ] Impact analysis is realistic
+     - [ ] Risk assessment is complete
+     - [ ] Effort estimates are reasonable
+     - [ ] Dependencies are identified
+     
+     ## Decision
+     - [ ] APPROVE - merge with `/speckit.approve-delta`
+     - [ ] MODIFY - edit delta-spec.md manually, then approve
+     - [ ] REJECT - discard with `/speckit.reject-delta`
+     
+     **Notes**: _[Reviewer notes]_
+     ```
+
+8. **Report completion**:
+   - Report delta location: `.deltas/{branch}/`
+   - Show change statistics
+   - List generated files:
+     * `delta-spec.md` - full delta specification
+     * `changes-summary.md` - quick overview
+     * `review-checklist.md` - review guide
+   - Recommend next steps:
+     * "Review the delta with `/speckit.review-delta`"
+     * "Edit `.deltas/{branch}/delta-spec.md` manually if needed"
+     * "Approve with `/speckit.approve-delta` or reject with `/speckit.reject-delta`"
+
+### Delta Generation Guidelines
+
+1. **Be Conservative**: Only include changes that are explicitly requested or clearly implied
+2. **Show Context**: For modifications, always show before/after comparison
+3. **Explain Everything**: Every change needs a clear rationale
+4. **Think About Impact**: Consider how changes affect existing implementations
+5. **Maintain Consistency**: Use same terminology and structure as existing spec
+6. **No Implementation Details**: Keep delta at same abstraction level as main spec
+
+### Special Cases
+
+**Case 1: User requests conflicting change**
+- Note the conflict in delta
+- Explain the conflict in rationale
+- Suggest resolution options
+- Mark as requiring manual review
+
+**Case 2: Change affects multiple sections**
+- Document all affected sections
+- Cross-reference related changes
+- Ensure consistency across all modifications
+
+**Case 3: Breaking change**
+- Clearly mark as breaking change
+- Provide detailed migration path
+- Estimate impact on existing implementations
+- Suggest alternatives if possible
+
+### Important Notes
+
+- **DO NOT** modify `specs/spec.md` directly - that happens in `/speckit.approve-delta`
+- **DO NOT** create branch or run create-new-feature.sh - use current branch from compare-specs.sh
+- **DO** preserve existing spec structure and style
+- **DO** make delta self-contained and reviewable
+- The delta is temporary - it will be merged or discarded, not committed long-term

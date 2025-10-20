@@ -186,12 +186,25 @@ else
     >&2 echo "[specify] Warning: Git repository not detected; skipped branch creation for $BRANCH_NAME"
 fi
 
-FEATURE_DIR="$SPECS_DIR/$BRANCH_NAME"
-mkdir -p "$FEATURE_DIR"
+# For new projects (no existing specs/spec.md), create spec directly in specs/
+# For existing projects, delta workflow will be used instead
+SPEC_FILE="$SPECS_DIR/spec.md"
 
-TEMPLATE="$REPO_ROOT/.specify/templates/spec-template.md"
-SPEC_FILE="$FEATURE_DIR/spec.md"
-if [ -f "$TEMPLATE" ]; then cp "$TEMPLATE" "$SPEC_FILE"; else touch "$SPEC_FILE"; fi
+# Check if this is the first spec
+if [ ! -f "$SPEC_FILE" ]; then
+    # First time: create spec.md in specs/ directly
+    TEMPLATE="$REPO_ROOT/.specify/templates/spec-template.md"
+    if [ -f "$TEMPLATE" ]; then 
+        cp "$TEMPLATE" "$SPEC_FILE"
+    else 
+        touch "$SPEC_FILE"
+    fi
+    >&2 echo "[specify] Created new specification at specs/spec.md"
+else
+    # Spec already exists - this shouldn't happen in create-new-feature
+    # The delta workflow should be used instead
+    >&2 echo "[specify] Warning: specs/spec.md already exists. Consider using delta workflow."
+fi
 
 # Set the SPECIFY_FEATURE environment variable for the current session
 export SPECIFY_FEATURE="$BRANCH_NAME"
