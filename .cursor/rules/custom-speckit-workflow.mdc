@@ -1,0 +1,463 @@
+# Custom Speckit Workflow Rules
+
+**CRITICAL**: This project uses a customized Speckit workflow with version-controlled specifications and delta-based change management. You MUST follow these rules strictly when working with specifications, plans, and tasks.
+
+---
+
+## 📁 Directory Structure (MANDATORY)
+
+### Single Source of Truth
+- **`specs/spec.md`** - The ONLY authoritative specification for the entire project
+- This is the single source of truth - all AI agents must use this as primary context
+- **NEVER** create `specs/{branch}/spec.md` - delta workflow is used instead
+
+### Delta Management (Temporary)
+- **`.deltas/{branch}/`** - Pending specification changes awaiting approval
+  - `delta-spec.md` - Proposed additions, modifications, deletions
+  - `changes-summary.md` - Quick overview
+  - `review-checklist.md` - Review status
+- These are **temporary** - automatically cleaned after approval/rejection
+- **DO NOT** commit `.deltas/` to version control (add to .gitignore)
+
+### Development History (Permanent)
+- **`features/{version}/{YYYY-MM-DD}_{branch}/`** - Historical record of development
+  - `plan.md` - Implementation plan for this feature
+  - `tasks.md` - Task breakdown for this feature
+  - Optional: `research.md`, `data-model.md`, `contracts/`, `quickstart.md`
+- Format: `features/v1.0.0/2025-01-20_001-feature-name/`
+- These are **permanent** - commit to version control
+
+---
+
+## 🔄 Workflow Decision Tree
+
+### First Time Using Speckit (No `specs/spec.md` exists)
+
+```
+1. Run: /speckit.specify "Feature description"
+   → Creates: specs/spec.md (new specification)
+   
+2. Run: /speckit.plan
+   → Creates: features/{version}/{date}_{branch}/plan.md
+   
+3. Run: /speckit.tasks
+   → Creates: features/{version}/{date}_{branch}/tasks.md
+   
+4. Run: /speckit.implement
+   → Executes tasks from tasks.md
+```
+
+### Modifying Existing Project (`specs/spec.md` exists)
+
+```
+1. Run: /speckit.specify "New feature or change request"
+   → Creates: .deltas/{branch}/delta-spec.md (changes only)
+   
+2. Run: /speckit.review-delta (RECOMMENDED)
+   → Analyzes: delta for issues, conflicts, constitution violations
+   
+3. Manual review and optional editing:
+   → Edit: .deltas/{branch}/delta-spec.md if needed
+   
+4. Decision:
+   A. Approve: /speckit.approve-delta
+      → Merges delta → specs/spec.md
+      → Archives/deletes .deltas/{branch}/
+   
+   B. Reject: /speckit.reject-delta
+      → Deletes .deltas/{branch}/
+      → specs/spec.md unchanged
+   
+5. After approval, continue:
+   → /speckit.plan → features/{version}/{date}_{branch}/plan.md
+   → /speckit.tasks → features/{version}/{date}_{branch}/tasks.md
+   → /speckit.implement
+```
+
+---
+
+## 🚫 CRITICAL PROHIBITIONS
+
+### NEVER Do These:
+
+1. **NEVER create `specs/{branch}/spec.md`**
+   - Only `specs/spec.md` (single file) should exist
+   - Branches are tracked in git, not in specs/ directories
+
+2. **NEVER modify `specs/spec.md` directly during feature development**
+   - Changes must go through delta approval process
+   - Exception: First project creation via `/speckit.specify`
+
+3. **NEVER save plan.md or tasks.md to `specs/` directory**
+   - They belong in `features/{version}/{date}_{branch}/`
+   - Example: `features/v1.0.0/2025-01-20_001-auth/plan.md`
+
+4. **NEVER skip delta review for existing projects**
+   - If `specs/spec.md` exists, `/speckit.specify` creates delta
+   - Delta MUST be approved before proceeding to plan/tasks
+
+5. **NEVER commit `.deltas/` to version control**
+   - These are temporary working files
+   - Add to .gitignore
+
+6. **NEVER use old spec paths in commands**
+   - ❌ BAD: Read from `specs/{branch}/spec.md`
+   - ✅ GOOD: Read from `specs/spec.md`
+
+---
+
+## ✅ MANDATORY Command Execution Rules
+
+### Rule 1: Always Check for Existing Spec First
+
+Before running `/speckit.specify`, check if `specs/spec.md` exists:
+- **If NO**: New project workflow (create specs/spec.md directly)
+- **If YES**: Delta workflow (create .deltas/{branch}/)
+
+The command automatically handles this via `compare-specs.sh`.
+
+### Rule 2: Script Execution Order
+
+All commands MUST run these scripts in order:
+
+**For `/speckit.specify`:**
+```bash
+1. .specify/scripts/bash/compare-specs.sh --json
+   → Determines: new project vs delta workflow
+```
+
+**For `/speckit.plan`:**
+```bash
+1. .specify/scripts/bash/compare-specs.sh --json
+   → Gets: branch name, delta status
+2. .specify/scripts/bash/get-version.sh --json --auto
+   → Gets: project version
+3. Create directory: features/{version}/{date}_{branch}/
+4. Save files to that directory
+```
+
+**For `/speckit.tasks`:**
+```bash
+1. .specify/scripts/bash/get-version.sh --json --auto
+2. .specify/scripts/bash/compare-specs.sh --json
+3. Read from: features/{version}/{date}_{branch}/plan.md
+4. Read from: specs/spec.md (main spec)
+5. Save to: features/{version}/{date}_{branch}/tasks.md
+```
+
+### Rule 3: File Reading Priority
+
+When loading context, read files in this priority:
+
+**Primary (ALWAYS):**
+1. `specs/spec.md` - Main specification
+2. `.specify/memory/constitution.md` - Project principles
+
+**Feature-Specific (if exists):**
+3. `.deltas/{branch}/delta-spec.md` - Current changes
+4. `features/{version}/{date}_{branch}/plan.md` - Current plan
+
+**Optional (if available):**
+5. `features/{version}/{date}_{branch}/data-model.md`
+6. `features/{version}/{date}_{branch}/contracts/`
+7. `features/{version}/{date}_{branch}/research.md`
+
+### Rule 4: Save Location Verification
+
+Before saving ANY file, verify the correct location:
+
+| File Type | Correct Location | WRONG Location |
+|-----------|------------------|----------------|
+| spec.md | `specs/spec.md` | ❌ `specs/{branch}/spec.md` |
+| delta-spec.md | `.deltas/{branch}/delta-spec.md` | ❌ `specs/` |
+| plan.md | `features/{version}/{date}_{branch}/plan.md` | ❌ `specs/{branch}/` |
+| tasks.md | `features/{version}/{date}_{branch}/tasks.md` | ❌ `specs/{branch}/` |
+| data-model.md | `features/{version}/{date}_{branch}/data-model.md` | ❌ `specs/{branch}/` |
+
+---
+
+## 📋 Delta Workflow Details
+
+### When Delta is Created
+
+Delta is created when:
+- `specs/spec.md` already exists
+- User runs `/speckit.specify` with new requirements
+- Changes detected compared to existing spec
+
+### Delta Structure
+
+The delta MUST contain:
+- **Additions**: New user stories, requirements, sections
+- **Modifications**: Changes to existing content (before/after)
+- **Deletions**: Removed requirements (with migration path)
+- **Impact Analysis**: Affected components, risks, effort
+- **Constitution Check**: Compliance verification
+
+### Delta Review Process
+
+1. **Auto-generated delta** → `.deltas/{branch}/delta-spec.md`
+2. **Run review** → `/speckit.review-delta` (recommended but optional)
+3. **Manual editing** → User can edit delta-spec.md directly
+4. **Approval decision**:
+   - `/speckit.approve-delta` → Merge to specs/spec.md
+   - `/speckit.reject-delta` → Discard changes
+
+### Delta Approval Actions
+
+When approved (`/speckit.approve-delta`):
+1. Backup created: `specs/.backups/spec_backup_{timestamp}_{branch}.md`
+2. Delta merged into `specs/spec.md`
+3. Change logged: `specs/CHANGELOG.md`
+4. Delta archived: `specs/.deltas-archive/{timestamp}_{branch}/` OR deleted
+5. Ready for `/speckit.plan`
+
+---
+
+## 🎯 Version Management
+
+### Version Detection Priority
+
+1. Git tags (e.g., `v1.0.0`, `v2.1.3`)
+2. `pyproject.toml` (Python projects)
+3. `package.json` (Node.js projects)
+4. User input (interactive prompt)
+5. Default: `v1.0.0` (if --auto flag)
+
+### Feature Directory Naming
+
+Format: `features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+
+Examples:
+- `features/v1.0.0/2025-01-20_001-user-auth/`
+- `features/v1.1.0/2025-02-15_002-payment/`
+- `features/v2.0.0/2025-03-01_003-api-redesign/`
+
+Components:
+- **VERSION**: From git tag or package.json/pyproject.toml
+- **YYYY-MM-DD**: Date when feature branch was created
+- **BRANCH**: Git branch name (e.g., `001-user-auth`)
+
+---
+
+## 🔍 Constitution Compliance
+
+### ALWAYS Check Constitution
+
+Every command MUST verify compliance with `.specify/memory/constitution.md`:
+- `/speckit.specify` → Check new requirements
+- `/speckit.plan` → Check technical decisions
+- `/speckit.review-delta` → Flag violations
+- `/speckit.approve-delta` → Block if violations exist
+
+### Constitution Violations are CRITICAL
+
+- **NEVER** approve delta with constitution violations
+- **ALWAYS** report violations to user
+- **REQUIRE** user to resolve before proceeding
+
+---
+
+## 💡 Best Practices
+
+### For AI Agents
+
+1. **Always run compare-specs.sh first** to determine workflow
+2. **Read specs/spec.md** as primary context (not specs/{branch}/)
+3. **Check for delta** before planning (load if exists)
+4. **Save to features/{version}/{date}_{branch}/** for plan/tasks
+5. **Verify paths** before writing any file
+6. **Log all script executions** for debugging
+
+### For Users
+
+1. **Review deltas** before approval (use `/speckit.review-delta`)
+2. **Edit deltas manually** if AI-generated changes need refinement
+3. **Keep constitution.md updated** to enforce project standards
+4. **Use semantic versioning** in git tags
+5. **Commit features/** to preserve history
+6. **Add .deltas/ to .gitignore**
+
+---
+
+## 🐛 Common Mistakes to Avoid
+
+### Mistake 1: Creating specs/{branch}/spec.md
+```
+❌ WRONG:
+   /speckit.specify → specs/001-feature/spec.md
+
+✅ CORRECT:
+   First time: /speckit.specify → specs/spec.md
+   Updates: /speckit.specify → .deltas/001-feature/delta-spec.md
+```
+
+### Mistake 2: Saving plan.md to specs/
+```
+❌ WRONG:
+   /speckit.plan → specs/001-feature/plan.md
+
+✅ CORRECT:
+   /speckit.plan → features/v1.0.0/2025-01-20_001-feature/plan.md
+```
+
+### Mistake 3: Skipping Delta Approval
+```
+❌ WRONG:
+   /speckit.specify → .deltas/002-auth/delta-spec.md
+   /speckit.plan ← ERROR: delta not approved
+
+✅ CORRECT:
+   /speckit.specify → .deltas/002-auth/delta-spec.md
+   /speckit.approve-delta → specs/spec.md updated
+   /speckit.plan ← OK
+```
+
+### Mistake 4: Reading from Wrong Spec
+```
+❌ WRONG:
+   Read context from: specs/001-feature/spec.md
+
+✅ CORRECT:
+   Read context from: specs/spec.md
+   + .deltas/{branch}/delta-spec.md (if exists)
+```
+
+---
+
+## 📊 Workflow State Diagram
+
+```
+[New Project]
+    ↓
+/speckit.specify
+    ↓
+specs/spec.md ← Single source of truth created
+    ↓
+/speckit.plan
+    ↓
+features/v1.0.0/2025-01-20_001-feature/plan.md
+    ↓
+/speckit.tasks
+    ↓
+features/v1.0.0/2025-01-20_001-feature/tasks.md
+
+
+[Existing Project]
+    ↓
+/speckit.specify
+    ↓
+.deltas/002-feature/delta-spec.md ← Temporary changes
+    ↓
+/speckit.review-delta (optional)
+    ↓
+Manual review/editing
+    ↓
+/speckit.approve-delta
+    ↓
+specs/spec.md ← Updated (delta merged)
+.deltas/002-feature/ ← Archived/deleted
+    ↓
+/speckit.plan
+    ↓
+features/v1.1.0/2025-01-22_002-feature/plan.md
+    ↓
+/speckit.tasks
+    ↓
+features/v1.1.0/2025-01-22_002-feature/tasks.md
+```
+
+---
+
+## 🔒 Enforcement Rules
+
+### BLOCK Execution If:
+
+1. Attempting to create `specs/{branch}/spec.md`
+2. Attempting to save plan.md outside `features/`
+3. Attempting to save tasks.md outside `features/`
+4. Running `/speckit.plan` without approving delta (when delta exists)
+5. Modifying `specs/spec.md` directly (not via delta approval)
+6. Constitution violations in delta
+
+### WARN User If:
+
+1. `.deltas/` directory exists (may indicate pending review)
+2. Multiple features/ versions detected (clarify which to use)
+3. No version found (will default to v1.0.0)
+4. Delta is very large (suggest breaking into smaller changes)
+
+---
+
+## 📝 Quick Reference
+
+### Commands in Order
+
+**New Project:**
+```
+/speckit.specify → /speckit.plan → /speckit.tasks → /speckit.implement
+```
+
+**Existing Project:**
+```
+/speckit.specify → /speckit.review-delta → /speckit.approve-delta → 
+/speckit.plan → /speckit.tasks → /speckit.implement
+```
+
+### File Locations
+
+```
+specs/
+  spec.md ← ONLY spec file (single source of truth)
+  CHANGELOG.md ← Change history
+  .backups/ ← Auto-generated backups
+
+.deltas/ ← TEMPORARY (add to .gitignore)
+  {branch}/
+    delta-spec.md
+    changes-summary.md
+    review-checklist.md
+
+features/ ← PERMANENT (commit to git)
+  {version}/
+    {date}_{branch}/
+      plan.md
+      tasks.md
+      research.md
+      data-model.md
+      quickstart.md
+      contracts/
+```
+
+### Scripts to Run
+
+```bash
+# Check for existing spec
+.specify/scripts/bash/compare-specs.sh --json
+
+# Get project version
+.specify/scripts/bash/get-version.sh --json --auto
+
+# Validate delta merge prerequisites
+.specify/scripts/bash/merge-delta-spec.sh --json \
+  --spec-path specs/spec.md \
+  --delta-path .deltas/{branch}/delta-spec.md \
+  --branch {branch}
+```
+
+---
+
+## ⚠️ CRITICAL REMINDERS
+
+1. **specs/spec.md is the ONLY spec file** - never create specs/{branch}/spec.md
+2. **All changes go through delta approval** - never modify specs/spec.md directly
+3. **plan.md and tasks.md live in features/** - never save to specs/
+4. **Always check for delta before planning** - load .deltas/{branch}/ if exists
+5. **Always run compare-specs.sh first** - determines new vs existing project
+6. **Constitution is non-negotiable** - block violations, don't ignore
+
+---
+
+**Last Updated**: 2025-01-20
+**Applies to**: All Speckit commands (/speckit.*)
+**Enforcement**: MANDATORY
