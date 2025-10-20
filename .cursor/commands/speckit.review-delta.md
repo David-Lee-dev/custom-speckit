@@ -29,7 +29,7 @@ This command is READ-ONLY - it does not modify any files, only provides analysis
 Run `.specify/scripts/bash/compare-specs.sh --json` from repo root and parse JSON for HAS_EXISTING_SPEC, SPEC_PATH, DELTA_DIR, and CURRENT_BRANCH. All paths must be absolute.
 
 **Prerequisites Check**:
-- If HAS_EXISTING_SPEC is false: ERROR "No existing spec found. Delta review requires specs/spec.md to exist."
+- If HAS_EXISTING_SPEC is false: ERROR "No existing spec found. Delta review requires .specify/specs/spec.md to exist."
 - If DELTA_DIR does not exist: ERROR "No delta found for branch {branch}. Run /speckit.specify first."
 
 Derive delta file paths:
@@ -44,7 +44,7 @@ For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot
 Load the following documents:
 
 **Required**:
-- `specs/spec.md` - existing specification (base)
+- `.specify/specs/spec.md` - existing specification (base)
 - `{DELTA_DIR}/delta-spec.md` - proposed changes
 
 **Optional** (if exist):
@@ -56,7 +56,7 @@ Load the following documents:
 
 Create internal representations for analysis:
 
-**From specs/spec.md**:
+**From .specify/specs/spec.md**:
 - Extract all user stories (with IDs and priorities)
 - Extract all functional requirements (with IDs)
 - Extract all non-functional requirements
@@ -338,10 +338,10 @@ Output a Markdown report (no file writes) with the following structure:
 ## Next Steps
 
 1. **If approving**: 
-   - Run `/speckit.approve-delta` to merge changes to specs/spec.md
+   - Run `/speckit.approve-delta` to merge changes to .specify/specs/spec.md
    
 2. **If editing first**:
-   - Manually edit `.deltas/{branch}/delta-spec.md` to address issues
+   - Manually edit `.specify/.specify/.deltas/{branch}/delta-spec.md` to address issues
    - Optionally re-run `/speckit.review-delta` to verify fixes
    - Run `/speckit.approve-delta` when ready
    

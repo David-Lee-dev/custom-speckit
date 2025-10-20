@@ -23,7 +23,7 @@ Custom Speckit은 [GitHub Spec-Kit](https://github.com/github/spec-kit)을 기�
 
 | 기능 | 설명 | 장점 |
 |------|------|------|
-| **Single Source of Truth** | 프로젝트당 하나의 `specs/spec.md` | AI가 일관된 context 사용 가능 |
+| **Single Source of Truth** | 프로젝트당 하나의 `.specify/specs/spec.md` | AI가 일관된 context 사용 가능 |
 | **Delta Management** | 변경점만 추출하여 관리 | 무엇이 바뀌는지 명확히 파악 |
 | **Review → Approve** | 변경사항 검토 후 승인/거부 | 실수 방지, 품질 보장 |
 | **Version History** | 개발 이력을 버전별로 보관 | 과거 결정 추적 가능 |
@@ -36,11 +36,11 @@ Custom Speckit은 [GitHub Spec-Kit](https://github.com/github/spec-kit)을 기�
 ```mermaid
 graph LR
     A[요구사항 입력] --> B[/speckit.specify]
-    B --> C[specs/spec.md 생성]
+    B --> C[.specify/specs/spec.md 생성]
     C --> D[/speckit.plan]
-    D --> E[features/v1.0.0/.../plan.md]
+    D --> E[.specify/features/v1.0.0/.../plan.md]
     E --> F[/speckit.tasks]
-    F --> G[features/v1.0.0/.../tasks.md]
+    F --> G[.specify/features/v1.0.0/.../tasks.md]
     G --> H[/speckit.implement]
 ```
 
@@ -49,12 +49,12 @@ graph LR
 ```mermaid
 graph LR
     A[변경 요청] --> B[/speckit.specify]
-    B --> C[.deltas/.../delta-spec.md]
+    B --> C[.specify/.deltas/.../delta-spec.md]
     C --> D[/speckit.review-delta]
     D --> E{검토}
     E -->|승인| F[/speckit.approve-delta]
     E -->|거부| G[/speckit.reject-delta]
-    F --> H[specs/spec.md 업데이트]
+    F --> H[.specify/specs/spec.md 업데이트]
     H --> I[/speckit.plan]
 ```
 
@@ -101,39 +101,42 @@ Custom Speckit은 Cursor AI 에디터에서 사용하도록 설계되었습니�
 ```
 your-project/
 │
-├── specs/                              ← 📌 최종 명세서 (단일 진실의 원천)
-│   ├── spec.md                         ✓ 프로젝트의 유일한 명세서
-│   ├── CHANGELOG.md                    ✓ 변경 이력
-│   └── .backups/                       ✓ 자동 백업
-│       └── spec_backup_20250120_*.md
-│
-├── .deltas/                            ← 🔄 임시 변경점 (.gitignore에 추가)
-│   └── {branch}/
-│       ├── delta-spec.md               ⏳ 승인 대기 중인 변경사항
-│       ├── changes-summary.md          📋 변경 요약
-│       └── review-checklist.md         ✅ 검토 체크리스트
-│
-├── features/                           ← 📚 개발 이력 (커밋 대상)
-│   ├── v1.0.0/
-│   │   └── 2025-01-20_001-auth/
-│   │       ├── plan.md                 📝 구현 계획
-│   │       ├── tasks.md                ✓ 작업 목록
-│   │       ├── research.md             🔍 기술 조사
-│   │       ├── data-model.md           💾 데이터 모델
-│   │       ├── quickstart.md           🚀 빠른 시작
-│   │       └── contracts/              📋 API 계약
-│   ├── v1.1.0/
-│   │   └── 2025-02-15_002-payment/
-│   └── v2.0.0/
-│       └── 2025-03-01_003-redesign/
-│
-├── .specify/                           ← ⚙️ Speckit 설정
+├── .specify/                           ← ⚙️ Speckit (모든 명세 관련 파일)
+│   │
+│   ├── specs/                          ← 📌 최종 명세서 (단일 진실의 원천)
+│   │   ├── spec.md                     ✓ 프로젝트의 유일한 명세서
+│   │   ├── CHANGELOG.md                ✓ 변경 이력
+│   │   └── .backups/                   ✓ 자동 백업
+│   │       └── spec_backup_20250120_*.md
+│   │
+│   ├── .specify/.deltas/                        ← 🔄 임시 변경점 (.gitignore에 추가)
+│   │   └── {branch}/
+│   │       ├── delta-spec.md           ⏳ 승인 대기 중인 변경사항
+│   │       ├── changes-summary.md      📋 변경 요약
+│   │       └── review-checklist.md     ✅ 검토 체크리스트
+│   │
+│   ├── features/                       ← 📚 개발 이력 (커밋 대상)
+│   │   ├── v1.0.0/
+│   │   │   └── 2025-01-20_001-auth/
+│   │   │       ├── plan.md             📝 구현 계획
+│   │   │       ├── tasks.md            ✓ 작업 목록
+│   │   │       ├── research.md         🔍 기술 조사
+│   │   │       ├── data-model.md       💾 데이터 모델
+│   │   │       ├── quickstart.md       🚀 빠른 시작
+│   │   │       └── contracts/          📋 API 계약
+│   │   ├── v1.1.0/
+│   │   │   └── 2025-02-15_002-payment/
+│   │   └── v2.0.0/
+│   │       └── 2025-03-01_003-redesign/
+│   │
 │   ├── memory/
 │   │   └── constitution.md             📜 프로젝트 헌장
+│   │
 │   ├── scripts/bash/                   🔧 헬퍼 스크립트
 │   │   ├── compare-specs.sh
 │   │   ├── get-version.sh
 │   │   └── merge-delta-spec.sh
+│   │
 │   └── templates/                      📄 문서 템플릿
 │       ├── spec-template.md
 │       ├── delta-spec-template.md
@@ -153,10 +156,12 @@ your-project/
 
 | 디렉토리 | 용도 | Git 커밋 | 설명 |
 |----------|------|----------|------|
-| `specs/` | 최종 명세서 | ✅ Yes | 프로젝트의 유일한 spec.md, AI context |
-| `.deltas/` | 임시 변경점 | ❌ No | 승인 전 임시 파일, .gitignore 추가 |
-| `features/` | 개발 이력 | ✅ Yes | 버전별 plan/tasks 보관 |
-| `.specify/` | Speckit 설정 | ✅ Yes | 스크립트, 템플릿, constitution |
+| `.specify/specs/` | 최종 명세서 | ✅ Yes | 프로젝트의 유일한 spec.md, AI context |
+| `.specify/.specify/.deltas/` | 임시 변경점 | ❌ No | 승인 전 임시 파일, .gitignore 추가 |
+| `.specify/features/` | 개발 이력 | ✅ Yes | 버전별 plan/tasks 보관 |
+| `.specify/memory/` | 프로젝트 원칙 | ✅ Yes | Constitution 문서 |
+| `.specify/scripts/` | 헬퍼 스크립트 | ✅ Yes | Bash 스크립트들 |
+| `.specify/templates/` | 문서 템플릿 | ✅ Yes | Spec, plan, tasks 템플릿 |
 | `.cursor/` | AI 설정 | ✅ Yes | 명령어, 규칙 |
 
 ## 🚀 빠른 시작 가이드
@@ -174,12 +179,12 @@ Cursor AI에서 Command Palette를 열고 (`Cmd+Shift+P`):
 ```
 
 **결과:**
-- ✅ `specs/spec.md` 생성
+- ✅ `.specify/specs/spec.md` 생성
 - AI가 자동으로 요구사항 분석, 사용자 스토리 작성, 수락 기준 정의
 
 **확인:**
 ```bash
-cat specs/spec.md  # 생성된 명세서 확인
+cat .specify/specs/spec.md  # 생성된 명세서 확인
 ```
 
 #### 2️⃣ 구현 계획 생성
@@ -189,7 +194,7 @@ cat specs/spec.md  # 생성된 명세서 확인
 ```
 
 **결과:**
-- ✅ `features/v1.0.0/2025-01-20_001-task-app/plan.md` 생성
+- ✅ `.specify/features/v1.0.0/2025-01-20_001-task-app/plan.md` 생성
 - 기술 스택, 아키텍처, 데이터 모델, API 계약 등 설계
 
 #### 3️⃣ 작업 분해
@@ -199,7 +204,7 @@ cat specs/spec.md  # 생성된 명세서 확인
 ```
 
 **결과:**
-- ✅ `features/v1.0.0/2025-01-20_001-task-app/tasks.md` 생성
+- ✅ `.specify/features/v1.0.0/2025-01-20_001-task-app/tasks.md` 생성
 - 사용자 스토리별로 세부 작업 분해, 의존성 관리
 
 #### 4️⃣ 구현 시작
@@ -216,7 +221,7 @@ cat specs/spec.md  # 생성된 명세서 확인
 
 ### 시나리오 2: 기존 프로젝트에 기능 추가하기
 
-이미 `specs/spec.md`가 있는 프로젝트에 새 기능을 추가할 때 사용합니다.
+이미 `.specify/specs/spec.md`가 있는 프로젝트에 새 기능을 추가할 때 사용합니다.
 
 #### 1️⃣ 변경사항 제안 (Delta 생성)
 
@@ -225,14 +230,14 @@ cat specs/spec.md  # 생성된 명세서 확인
 ```
 
 **결과:**
-- ✅ `.deltas/002-auth/delta-spec.md` 생성
+- ✅ `.specify/.deltas/002-auth/delta-spec.md` 생성
 - 기존 spec과 비교하여 **추가/수정/삭제**할 내용만 추출
-- ✅ `.deltas/002-auth/changes-summary.md` - 변경 요약
-- ✅ `.deltas/002-auth/review-checklist.md` - 검토 체크리스트
+- ✅ `.specify/.deltas/002-auth/changes-summary.md` - 변경 요약
+- ✅ `.specify/.deltas/002-auth/review-checklist.md` - 검토 체크리스트
 
 **확인:**
 ```bash
-cat .deltas/002-auth/delta-spec.md  # 변경사항 확인
+cat .specify/.deltas/002-auth/delta-spec.md  # 변경사항 확인
 ```
 
 #### 2️⃣ 변경사항 검토 (선택사항, 권장)
@@ -262,10 +267,10 @@ Delta가 마음에 들지 않으면 직접 수정 가능:
 
 ```bash
 # Cursor에서 파일 열기
-open .deltas/002-auth/delta-spec.md
+open .specify/.deltas/002-auth/delta-spec.md
 
 # 또는 vim/nano 등으로 편집
-vim .deltas/002-auth/delta-spec.md
+vim .specify/.deltas/002-auth/delta-spec.md
 ```
 
 #### 4️⃣ 변경사항 승인
@@ -278,16 +283,16 @@ vim .deltas/002-auth/delta-spec.md
 
 **확인 프롬프트:**
 ```
-⚠️ 2개 추가, 1개 수정, 0개 삭제를 specs/spec.md에 반영합니다. 계속하시겠습니까? (yes/no)
+⚠️ 2개 추가, 1개 수정, 0개 삭제를 .specify/specs/spec.md에 반영합니다. 계속하시겠습니까? (yes/no)
 ```
 
 **응답: `yes`**
 
 **결과:**
-- ✅ `specs/spec.md` 업데이트 (delta 내용 병합)
-- ✅ `specs/.backups/spec_backup_20250120_143022_002-auth.md` 백업 생성
-- ✅ `specs/CHANGELOG.md` 변경 이력 기록
-- ✅ `.deltas/002-auth/` 아카이브 또는 삭제
+- ✅ `.specify/specs/spec.md` 업데이트 (delta 내용 병합)
+- ✅ `.specify/specs/.backups/spec_backup_20250120_143022_002-auth.md` 백업 생성
+- ✅ `.specify/specs/CHANGELOG.md` 변경 이력 기록
+- ✅ `.specify/.deltas/002-auth/` 아카이브 또는 삭제
 
 #### 5️⃣ 구현 계획 및 작업 분해
 
@@ -298,14 +303,14 @@ vim .deltas/002-auth/delta-spec.md
 ```
 
 **결과:**
-- ✅ `features/v1.1.0/2025-01-22_002-auth/plan.md`
+- ✅ `.specify/features/v1.1.0/2025-01-22_002-auth/plan.md`
 
 ```
 /speckit.tasks
 ```
 
 **결과:**
-- ✅ `features/v1.1.0/2025-01-22_002-auth/tasks.md`
+- ✅ `.specify/features/v1.1.0/2025-01-22_002-auth/tasks.md`
 
 #### 6️⃣ 구현
 
@@ -325,13 +330,13 @@ Delta를 검토한 후 적용하고 싶지 않을 때:
 
 **확인 프롬프트:**
 ```
-⚠️ .deltas/002-auth/를 삭제합니다. 계속하시겠습니까? (yes/no)
+⚠️ .specify/.deltas/002-auth/를 삭제합니다. 계속하시겠습니까? (yes/no)
 Archive하시겠습니까? (yes/no)
 ```
 
 **결과:**
-- ✅ `.deltas/002-auth/` 삭제 (또는 아카이브)
-- ✅ `specs/spec.md` 그대로 유지 (변경 없음)
+- ✅ `.specify/.deltas/002-auth/` 삭제 (또는 아카이브)
+- ✅ `.specify/specs/spec.md` 그대로 유지 (변경 없음)
 - ✅ 거부 이력 기록
 
 ---
@@ -342,16 +347,16 @@ Archive하시겠습니까? (yes/no)
 
 ```bash
 # 1. 백업 파일 확인
-ls specs/.backups/
+ls .specify/specs/.backups/
 
 # 2. 가장 최근 백업으로 복구
-cp specs/.backups/spec_backup_20250120_143022_002-auth.md specs/spec.md
+cp .specify/specs/.backups/spec_backup_20250120_143022_002-auth.md .specify/specs/spec.md
 
 # 3. Delta 복원 (아카이브된 경우)
-mv specs/.deltas-archive/20250120_143022_002-auth .deltas/002-auth
+mv specs/.deltas-archive/20250120_143022_002-auth .specify/.deltas/002-auth
 
 # 4. CHANGELOG 수동 되돌리기
-vim specs/CHANGELOG.md
+vim .specify/specs/CHANGELOG.md
 ```
 
 ## 📝 명령어 레퍼런스
@@ -360,7 +365,7 @@ vim specs/CHANGELOG.md
 
 | 명령어 | 단계 | 설명 | 입력 | 출력 |
 |--------|------|------|------|------|
-| `/speckit.specify` | 1️⃣ | 명세서 생성/수정 | 자연어 요구사항 | `specs/spec.md` 또는 `.deltas/{branch}/` |
+| `/speckit.specify` | 1️⃣ | 명세서 생성/수정 | 자연어 요구사항 | `.specify/specs/spec.md` 또는 `.specify/.deltas/{branch}/` |
 | `/speckit.plan` | 2️⃣ | 구현 계획 생성 | (자동) | `features/{version}/{date}_{branch}/plan.md` |
 | `/speckit.tasks` | 3️⃣ | 작업 목록 생성 | (자동) | `features/{version}/{date}_{branch}/tasks.md` |
 | `/speckit.implement` | 4️⃣ | 구현 실행 | (자동) | 소스 코드, 테스트 |
@@ -397,7 +402,7 @@ specify → review-delta → approve-delta → plan → tasks → implement
 
 | Aspect | Original Spec-Kit | Custom Speckit |
 |--------|-------------------|----------------|
-| **Spec Location** | `specs/{branch}/spec.md` | `specs/spec.md` (single file) |
+| **Spec Location** | `specs/{branch}/spec.md` | `.specify/specs/spec.md` (single file) |
 | **Change Management** | Create new spec per feature | Delta → Review → Approve |
 | **Plan/Tasks Location** | `specs/{branch}/` | `features/{version}/{date}_{branch}/` |
 | **Version Tracking** | Branch number only | Version + Date + Branch |
@@ -410,12 +415,12 @@ See [`.cursor/rules/custom-speckit-workflow.mdc`](.cursor/rules/custom-speckit-w
 
 ### Critical Rules
 
-1. ✅ **Only one spec file**: `specs/spec.md` is the single source of truth
+1. ✅ **Only one spec file**: `.specify/specs/spec.md` is the single source of truth
 2. ✅ **Delta approval required**: Changes must be approved via `/speckit.approve-delta`
 3. ✅ **Features directory**: Save plan.md and tasks.md to `features/{version}/{date}_{branch}/`
 4. ✅ **Constitution compliance**: All changes must comply with `.specify/memory/constitution.md`
 5. ❌ **Never create**: `specs/{branch}/spec.md` (old pattern)
-6. ❌ **Never modify directly**: `specs/spec.md` (use delta workflow)
+6. ❌ **Never modify directly**: `.specify/specs/spec.md` (use delta workflow)
 
 ## Version Management
 
@@ -448,15 +453,15 @@ Define your project's core principles in `.specify/memory/constitution.md`. All 
 # Start new project
 /speckit.specify "Build a blog platform with posts, comments, and user profiles"
 
-# Review generated spec at: specs/spec.md
+# Review generated spec at: .specify/specs/spec.md
 
 # Generate plan
 /speckit.plan
-# Output: features/v1.0.0/2025-01-20_001-blog-platform/plan.md
+# Output: .specify/features/v1.0.0/2025-01-20_001-blog-platform/plan.md
 
 # Generate tasks
 /speckit.tasks
-# Output: features/v1.0.0/2025-01-20_001-blog-platform/tasks.md
+# Output: .specify/features/v1.0.0/2025-01-20_001-blog-platform/tasks.md
 ```
 
 ### Example 2: Adding a Feature
@@ -467,14 +472,14 @@ Define your project's core principles in `.specify/memory/constitution.md`. All 
 
 # Review delta
 /speckit.review-delta
-# Analyzes: .deltas/002-comment-moderation/delta-spec.md
+# Analyzes: .specify/.deltas/002-comment-moderation/delta-spec.md
 
 # Edit manually if needed
-# vim .deltas/002-comment-moderation/delta-spec.md
+# vim .specify/.deltas/002-comment-moderation/delta-spec.md
 
 # Approve
 /speckit.approve-delta
-# Merges to: specs/spec.md
+# Merges to: .specify/specs/spec.md
 
 # Continue with plan and tasks
 /speckit.plan
@@ -512,7 +517,7 @@ Define your project's core principles in `.specify/memory/constitution.md`. All 
 
 ```bash
 # Delta 승인 후
-git add specs/spec.md features/
+git add .specify/specs/spec.md features/
 git commit -m "feat(auth): add user authentication spec
 
 - Add login, signup, password reset user stories
@@ -556,7 +561,7 @@ Delta 승인 전 확인사항:
 
 각 feature 디렉토리에 추가 문서 작성:
 ```
-features/v1.1.0/2025-01-22_002-auth/
+.specify/features/v1.1.0/2025-01-22_002-auth/
 ├── plan.md
 ├── tasks.md
 ├── implementation-notes.md    ← 구현 중 발견한 사항
@@ -568,7 +573,7 @@ features/v1.1.0/2025-01-22_002-auth/
 
 ## ❓ 자주 묻는 질문 (FAQ)
 
-### Q1: specs/spec.md를 직접 수정하면 안 되나요?
+### Q1: .specify/specs/spec.md를 직접 수정하면 안 되나요?
 
 **A:** 안 됩니다. 반드시 Delta 워크플로우를 거쳐야 합니다.
 
@@ -582,7 +587,7 @@ features/v1.1.0/2025-01-22_002-auth/
 
 ---
 
-### Q2: .deltas/를 Git에 커밋해야 하나요?
+### Q2: .specify/.deltas/를 Git에 커밋해야 하나요?
 
 **A:** 아니요, `.gitignore`에 추가하세요.
 
@@ -623,7 +628,7 @@ git checkout -b 002-feature-b
 
 ```bash
 # Plan 수정
-vim features/v1.0.0/2025-01-20_001-feature/plan.md
+vim .specify/features/v1.0.0/2025-01-20_001-feature/plan.md
 
 # 수정 후 재생성 (선택)
 /speckit.tasks  # plan.md 기반으로 tasks.md 재생성
@@ -662,13 +667,13 @@ version = "2.0.0"
 
 ```bash
 # 1. 백업 확인
-ls specs/.backups/
+ls .specify/specs/.backups/
 
 # 2. 복구
-cp specs/.backups/spec_backup_20250120_*.md specs/spec.md
+cp .specify/specs/.backups/spec_backup_20250120_*.md .specify/specs/spec.md
 
 # 3. Git으로도 가능
-git checkout HEAD~1 specs/spec.md
+git checkout HEAD~1 .specify/specs/spec.md
 ```
 
 ---
@@ -691,21 +696,21 @@ git commit -m "docs: update constitution - add new principle"
 
 **A:** 다음 절차:
 
-1. 최신 feature의 spec을 `specs/spec.md`로 복사
-2. 기존 `specs/` 디렉토리를 `features/v1.0.0/`로 이동
+1. 최신 feature의 spec을 `.specify/specs/spec.md`로 복사
+2. 기존 `specs/` 디렉토리를 `.specify/features/v1.0.0/`로 이동
 3. 날짜 정보를 Git commit date에서 추출
 4. Custom Speckit 설정 추가
 
 ```bash
 # 1. 최신 spec 복사
-cp specs/003-latest-feature/spec.md specs/spec.md
+cp specs/003-latest-feature/spec.md .specify/specs/spec.md
 
 # 2. 기존 디렉토리 이동
-mkdir -p features/v1.0.0
-mv specs/001-* specs/002-* specs/003-* features/v1.0.0/
+mkdir -p .specify/features/v1.0.0
+mv specs/001-* specs/002-* specs/003-* .specify/features/v1.0.0/
 
 # 3. 날짜 추가 (수동 또는 스크립트)
-cd features/v1.0.0
+cd .specify/features/v1.0.0
 for dir in */; do
   date=$(git log --format=%cd --date=short -- "$dir" | head -1)
   mv "$dir" "${date}_${dir}"
@@ -718,7 +723,7 @@ done
 
 ### 오류: "No delta found for branch"
 
-**원인:** `.deltas/{branch}/` 디렉토리가 없음
+**원인:** `.specify/.deltas/{branch}/` 디렉토리가 없음
 
 **해결:**
 ```bash
@@ -728,7 +733,7 @@ git branch --show-current
 # 2. Delta 생성
 /speckit.specify "요구사항 입력"
 
-# 3. specs/spec.md가 없는 경우
+# 3. .specify/specs/spec.md가 없는 경우
 # → 신규 프로젝트 워크플로우 (Delta 생성 안 됨)
 # → 정상 동작
 ```
@@ -742,7 +747,7 @@ git branch --show-current
 **해결:**
 ```bash
 # Delta 확인
-cat .deltas/{branch}/delta-spec.md
+cat .specify/.deltas/{branch}/delta-spec.md
 
 # 승인 또는 거부
 /speckit.approve-delta  # 승인
@@ -762,7 +767,7 @@ cat .deltas/{branch}/delta-spec.md
 /speckit.plan
 
 # 2. 올바른 경로 확인
-ls features/*/2025-*-*/plan.md
+ls .specify/features/*/2025-*-*/plan.md
 
 # 3. 버전 확인
 .specify/scripts/bash/get-version.sh
@@ -780,7 +785,7 @@ ls features/*/2025-*-*/plan.md
 /speckit.review-delta
 
 # 2. Delta 수정
-vim .deltas/{branch}/delta-spec.md
+vim .specify/.deltas/{branch}/delta-spec.md
 
 # 3. Constitution 수정 (팀 합의 필요)
 vim .specify/memory/constitution.md
@@ -861,7 +866,7 @@ EOF
 - [ ] `.specify/` 및 `.cursor/` 디렉토리 복사
 - [ ] 스크립트 실행 권한 부여 (`chmod +x`)
 - [ ] `.specify/memory/constitution.md` 작성 (프로젝트 원칙)
-- [ ] `.gitignore`에 `.deltas/` 추가
+- [ ] `.gitignore`에 `.specify/.deltas/` 추가
 - [ ] 버전 정보 설정 (Git tag 또는 package.json/pyproject.toml)
 - [ ] 팀원과 워크플로우 공유
 

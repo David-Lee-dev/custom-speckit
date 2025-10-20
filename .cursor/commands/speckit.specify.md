@@ -27,7 +27,7 @@ Run `.specify/scripts/bash/compare-specs.sh --json` from repo root and parse its
 
 ## New Project Workflow
 
-This workflow is used when `specs/spec.md` does not exist (first time using speckit).
+This workflow is used when `.specify/specs/spec.md` does not exist (first time using speckit).
 
 1. **Generate a concise short name** (2-4 words) for the branch:
    - Analyze the feature description and extract the most meaningful keywords
@@ -43,7 +43,7 @@ This workflow is used when `specs/spec.md` does not exist (first time using spec
 
 2. Run the script `.specify/scripts/bash/create-new-feature.sh --json "$ARGUMENTS"` from repo root **with the short-name argument** and parse its JSON output for BRANCH_NAME and SPEC_FILE. All file paths must be absolute.
    
-   **NOTE**: For new projects, this creates the spec at `specs/{branch}/spec.md`. After completion, you should move it to `specs/spec.md` as the single source of truth.
+   **NOTE**: For new projects, this creates the spec at `specs/{branch}/spec.md`. After completion, you should move it to `.specify/specs/spec.md` as the single source of truth.
 
    **IMPORTANT**:
 
@@ -247,14 +247,14 @@ Success criteria must be:
 
 ## Delta Workflow
 
-This workflow is used when `specs/spec.md` already exists (modifying existing project).
+This workflow is used when `.specify/specs/spec.md` already exists (modifying existing project).
 
 **Purpose**: Generate a delta specification that captures ONLY the changes (additions, modifications, deletions) to be reviewed and approved before merging into the main spec.
 
 ### Delta Generation Steps
 
 1. **Load existing specification**:
-   - Read `specs/spec.md` (path from compare-specs.sh output)
+   - Read `.specify/specs/spec.md` (path from compare-specs.sh output)
    - Parse current user stories, requirements, and structure
    - Note the last modification time
 
@@ -271,7 +271,7 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
    - **Deletions**: Explicitly requested removals or deprecations
    
 4. **Create delta directory**:
-   - Create `.deltas/{CURRENT_BRANCH}/` directory
+   - Create `.specify/.deltas/{CURRENT_BRANCH}/` directory
    - Branch name comes from compare-specs.sh output
 
 5. **Generate delta-spec.md**:
@@ -300,7 +300,7 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
    - Provide migration path for existing implementations
 
 6. **Generate changes-summary.md**:
-   - Create `.deltas/{CURRENT_BRANCH}/changes-summary.md`
+   - Create `.specify/.deltas/{CURRENT_BRANCH}/changes-summary.md`
    - Human-readable summary of changes
    - Format:
      ```markdown
@@ -320,14 +320,14 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
      - {Most significant change 3}
      
      ## Next Steps
-     1. Review delta at `.deltas/{branch}/delta-spec.md`
+     1. Review delta at `.specify/.specify/.deltas/{branch}/delta-spec.md`
      2. Run `/speckit.review-delta` for detailed analysis
      3. Manually edit delta if needed
      4. Run `/speckit.approve-delta` to merge or `/speckit.reject-delta` to discard
      ```
 
 7. **Generate review checklist**:
-   - Create `.deltas/{CURRENT_BRANCH}/review-checklist.md`
+   - Create `.specify/.deltas/{CURRENT_BRANCH}/review-checklist.md`
    - Pre-filled checklist for reviewers
    - Format:
      ```markdown
@@ -364,7 +364,7 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
      ```
 
 8. **Report completion**:
-   - Report delta location: `.deltas/{branch}/`
+   - Report delta location: `.specify/.specify/.deltas/{branch}/`
    - Show change statistics
    - List generated files:
      * `delta-spec.md` - full delta specification
@@ -372,7 +372,7 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
      * `review-checklist.md` - review guide
    - Recommend next steps:
      * "Review the delta with `/speckit.review-delta`"
-     * "Edit `.deltas/{branch}/delta-spec.md` manually if needed"
+     * "Edit `.specify/.specify/.deltas/{branch}/delta-spec.md` manually if needed"
      * "Approve with `/speckit.approve-delta` or reject with `/speckit.reject-delta`"
 
 ### Delta Generation Guidelines
@@ -405,7 +405,7 @@ This workflow is used when `specs/spec.md` already exists (modifying existing pr
 
 ### Important Notes
 
-- **DO NOT** modify `specs/spec.md` directly - that happens in `/speckit.approve-delta`
+- **DO NOT** modify `.specify/specs/spec.md` directly - that happens in `/speckit.approve-delta`
 - **DO NOT** create branch or run create-new-feature.sh - use current branch from compare-specs.sh
 - **DO** preserve existing spec structure and style
 - **DO** make delta self-contained and reviewable

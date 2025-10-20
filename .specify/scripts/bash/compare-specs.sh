@@ -67,8 +67,8 @@ REPO_ROOT=$(get_repo_root)
 CURRENT_BRANCH=$(get_current_branch)
 
 # Define paths
-SPEC_PATH="$REPO_ROOT/specs/spec.md"
-DELTA_DIR="$REPO_ROOT/.deltas/$CURRENT_BRANCH"
+SPEC_PATH="$REPO_ROOT/.specify/specs/spec.md"
+DELTA_DIR="$REPO_ROOT/.specify/.deltas/$CURRENT_BRANCH"
 
 # Check if existing spec exists
 HAS_EXISTING_SPEC=false

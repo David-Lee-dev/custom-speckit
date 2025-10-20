@@ -28,7 +28,7 @@ get_current_branch() {
 
     # For non-git repos, try to find the latest feature directory
     local repo_root=$(get_repo_root)
-    local specs_dir="$repo_root/specs"
+    local specs_dir="$repo_root/.specify/specs"
 
     if [[ -d "$specs_dir" ]]; then
         local latest_feature=""
@@ -141,7 +141,7 @@ REPO_ROOT='$repo_root'
 CURRENT_BRANCH='$current_branch'
 HAS_GIT='$has_git_repo'
 FEATURE_DIR='$feature_dir'
-FEATURE_SPEC='$feature_dir/spec.md'
+FEATURE_SPEC='$repo_root/.specify/specs/spec.md'
 IMPL_PLAN='$feature_dir/plan.md'
 TASKS='$feature_dir/tasks.md'
 RESEARCH='$feature_dir/research.md'

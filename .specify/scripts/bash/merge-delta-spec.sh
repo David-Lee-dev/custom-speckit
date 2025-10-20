@@ -60,8 +60,8 @@ OPTIONS:
 
 EXAMPLES:
   # Prepare merge with JSON output
-  ./merge-delta-spec.sh --spec-path specs/spec.md \
-    --delta-path .deltas/001-feature/delta-spec.md \
+  ./merge-delta-spec.sh --spec-path .specify/specs/spec.md \
+    --delta-path .specify/.deltas/001-feature/delta-spec.md \
     --branch 001-feature --json
 
 NOTE:

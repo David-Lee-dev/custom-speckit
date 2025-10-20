@@ -2,7 +2,7 @@
 # These directories contain temporary working files that should not be committed
 
 # Delta specifications (temporary, pending approval)
-.deltas/
+.specify/.deltas/
 
 # Agent tool outputs
 .cursor/.agent-tools/

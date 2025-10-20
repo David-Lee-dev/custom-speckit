@@ -14,7 +14,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 Reject the pending delta specification and clean up associated files, without modifying the main spec.
 
-This is a destructive operation for the delta only - the main `specs/spec.md` remains unchanged.
+This is a destructive operation for the delta only - the main `.specify/specs/spec.md` remains unchanged.
 
 ## Execution Steps
 
@@ -52,7 +52,7 @@ You are about to **reject and delete** the pending delta specification.
 
 **This action**:
 - ✅ WILL delete all delta files
-- ✅ WILL NOT modify specs/spec.md (main spec remains unchanged)
+- ✅ WILL NOT modify .specify/specs/spec.md (main spec remains unchanged)
 - ❌ CANNOT be undone (unless delta is in version control)
 
 **Proceed with rejection?** (yes/no)
@@ -82,7 +82,7 @@ This allows you to review what was rejected later if needed.
 **If user chooses "yes"**:
 1. Create archive directory: `mkdir -p specs/.deltas-archive/`
 2. Generate archive name with timestamp: `{YYYYMMDD_HHMMSS}_{branch}_REJECTED`
-3. Move delta: `mv .deltas/{branch} specs/.deltas-archive/{timestamp}_{branch}_REJECTED/`
+3. Move delta: `mv .specify/.deltas/{branch} specs/.deltas-archive/{timestamp}_{branch}_REJECTED/`
 4. Add rejection note to archive:
    ```bash
    echo "REJECTED on {timestamp} by user" > specs/.deltas-archive/{timestamp}_{branch}_REJECTED/REJECTED.txt
@@ -154,15 +154,15 @@ Provide comprehensive completion report:
 ## What Happened
 
 ✅ Delta specification has been rejected and removed  
-✅ Main spec (specs/spec.md) remains unchanged  
+✅ Main spec (.specify/specs/spec.md) remains unchanged  
 {✅ Delta archived to: specs/.deltas-archive/{timestamp}_{branch}_REJECTED/ (if archived)}  
 {✅ Git branch deleted (if requested)}
 
 ## Files Deleted
 
-- `.deltas/{branch}/delta-spec.md`
-- `.deltas/{branch}/changes-summary.md`
-- `.deltas/{branch}/review-checklist.md`
+- `.specify/.specify/.deltas/{branch}/delta-spec.md`
+- `.specify/.specify/.deltas/{branch}/changes-summary.md`
+- `.specify/.specify/.deltas/{branch}/review-checklist.md`
 
 ## Rejection Reason
 
@@ -190,7 +190,7 @@ You can:
 
 1. **Confirmation required**: Always ask before deleting (unless --force)
 2. **Archive option**: Offer to archive before deletion for audit trail
-3. **Read-only for main spec**: Never modify specs/spec.md during rejection
+3. **Read-only for main spec**: Never modify .specify/specs/spec.md during rejection
 4. **Log all rejections**: Maintain audit log of what was rejected and why
 
 ### Command Flags
@@ -221,7 +221,7 @@ Common reasons:
 ## Error Handling
 
 **If delta directory doesn't exist**:
-- Check if it was already merged: Look for entry in specs/CHANGELOG.md
+- Check if it was already merged: Look for entry in .specify/specs/CHANGELOG.md
 - Check if it was already archived: Look in specs/.deltas-archive/
 - Report status and suggest next steps
 

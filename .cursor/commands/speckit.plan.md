@@ -23,8 +23,8 @@ You **MUST** consider the user input before proceeding (if not empty).
    For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load context**: 
-   - Read `specs/spec.md` (main specification)
-   - If delta exists (`.deltas/{BRANCH}/delta-spec.md`): Load it as well to understand what's changing
+   - Read `.specify/specs/spec.md` (main specification)
+   - If delta exists (`.specify/.deltas/{BRANCH}/delta-spec.md`): Load it as well to understand what's changing
    - Read `.specify/memory/constitution.md`
    - Load `.specify/templates/plan-template.md` for structure
 
