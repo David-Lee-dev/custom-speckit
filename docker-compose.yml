@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  pypiserver:
+    image: pypiserver/pypiserver:latest
+    container_name: custom-speckit-pypi
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.docker/packages:/data/packages
+    command: run -P . -a . /data/packages
+    restart: unless-stopped
+    environment:
+      - PYPI_SERVER_PORT=8080
+
