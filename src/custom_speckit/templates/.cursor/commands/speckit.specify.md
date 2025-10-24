@@ -1,5 +1,7 @@
 ---
 description: Create or update the feature specification from a natural language feature description.
+scripts:
+  sh: .specify/scripts/bash/compare-specs.sh --json
 ---
 
 ## User Input

@@ -65,6 +65,38 @@ find_repo_root() {
     return 1
 }
 
+# Function to check existing branches (local, remote, and specs) and return next available number
+check_existing_branches() {
+    local short_name="$1"
+    local specs_dir="$2"
+    
+    # Fetch all remotes to get latest branch info (suppress errors if no remotes)
+    git fetch --all --prune 2>/dev/null || true
+    
+    # Find all branches matching the pattern using git ls-remote (more reliable)
+    local remote_branches=$(git ls-remote --heads origin 2>/dev/null | grep -E "refs/heads/[0-9]+-${short_name}$" | sed 's/.*\/\([0-9]*\)-.*/\1/' | sort -n)
+    
+    # Also check local branches
+    local local_branches=$(git branch 2>/dev/null | grep -E "^[* ]*[0-9]+-${short_name}$" | sed 's/^[* ]*//' | sed 's/-.*//' | sort -n)
+    
+    # Check specs directory as well
+    local spec_dirs=""
+    if [ -d "$specs_dir" ]; then
+        spec_dirs=$(find "$specs_dir" -maxdepth 1 -type d -name "[0-9]*-${short_name}" 2>/dev/null | xargs -n1 basename 2>/dev/null | sed 's/-.*//' | sort -n)
+    fi
+    
+    # Combine all sources and get the highest number
+    local max_num=0
+    for num in $remote_branches $local_branches $spec_dirs; do
+        if [ "$num" -gt "$max_num" ]; then
+            max_num=$num
+        fi
+    done
+    
+    # Return next number
+    echo $((max_num + 1))
+}
+
 # Resolve repository root. Prefer git information when available, but fall back
 # to searching for repository markers so the workflow still functions in repositories that
 # were initialised with --no-git.
@@ -86,20 +118,6 @@ cd "$REPO_ROOT"
 
 SPECS_DIR="$REPO_ROOT/.specify/specs"
 mkdir -p "$SPECS_DIR"
-
-HIGHEST=0
-if [ -d "$SPECS_DIR" ]; then
-    for dir in "$SPECS_DIR"/*; do
-        [ -d "$dir" ] || continue
-        dirname=$(basename "$dir")
-        number=$(echo "$dirname" | grep -o '^[0-9]\+' || echo "0")
-        number=$((10#$number))
-        if [ "$number" -gt "$HIGHEST" ]; then HIGHEST=$number; fi
-    done
-fi
-
-NEXT=$((HIGHEST + 1))
-FEATURE_NUM=$(printf "%03d" "$NEXT")
 
 # Function to generate branch name with stop word filtering and length filtering
 generate_branch_name() {
@@ -148,7 +166,7 @@ generate_branch_name() {
     fi
 }
 
-# Generate branch name
+# Generate branch suffix (short name)
 if [ -n "$SHORT_NAME" ]; then
     # Use provided short name, just clean it up
     BRANCH_SUFFIX=$(echo "$SHORT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
@@ -157,6 +175,11 @@ else
     BRANCH_SUFFIX=$(generate_branch_name "$FEATURE_DESCRIPTION")
 fi
 
+# Check existing branches (local, remote, and specs) to determine next available number
+NEXT=$(check_existing_branches "$BRANCH_SUFFIX" "$SPECS_DIR")
+FEATURE_NUM=$(printf "%03d" "$NEXT")
+
+# Combine number and suffix to create full branch name
 BRANCH_NAME="${FEATURE_NUM}-${BRANCH_SUFFIX}"
 
 # GitHub enforces a 244-byte limit on branch names

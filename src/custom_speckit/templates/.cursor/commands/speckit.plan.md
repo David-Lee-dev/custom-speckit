@@ -1,5 +1,7 @@
 ---
 description: Execute the implementation planning workflow using the plan template to generate design artifacts.
+scripts:
+  sh: .specify/scripts/bash/compare-specs.sh --json && .specify/scripts/bash/get-version.sh --json --auto
 ---
 
 ## User Input

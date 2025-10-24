@@ -1,5 +1,7 @@
 ---
 description: Approve and merge a delta specification into the main spec.
+scripts:
+  sh: .specify/scripts/bash/compare-specs.sh --json
 ---
 
 ## User Input

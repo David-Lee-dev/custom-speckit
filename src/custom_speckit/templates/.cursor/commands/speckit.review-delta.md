@@ -1,5 +1,7 @@
 ---
 description: Review and analyze a pending delta specification before approval.
+scripts:
+  sh: .specify/scripts/bash/compare-specs.sh --json
 ---
 
 ## User Input

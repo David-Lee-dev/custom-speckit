@@ -1,5 +1,7 @@
 ---
 description: Reject and discard a pending delta specification.
+scripts:
+  sh: .specify/scripts/bash/compare-specs.sh --json
 ---
 
 ## User Input

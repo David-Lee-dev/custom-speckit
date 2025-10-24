@@ -1,5 +1,7 @@
 ---
 description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
+scripts:
+  sh: .specify/scripts/bash/get-version.sh --json --auto && .specify/scripts/bash/compare-specs.sh --json
 ---
 
 ## User Input
