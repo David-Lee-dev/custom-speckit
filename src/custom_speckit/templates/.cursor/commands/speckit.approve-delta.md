@@ -12,6 +12,19 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from spec.md and delta-spec.md, use it for merge messages.
+
+**Detection Steps**:
+1. Read spec.md to detect existing language
+2. Use detected language for:
+   - CHANGELOG entries
+   - Merge commit messages
+   - Backup notifications
+
+**Consistency Rule**: All messages match spec.md language.
+
 ## Goal
 
 Merge the approved delta specification changes into `.specify/specs/spec.md`, creating a backup and maintaining change history.

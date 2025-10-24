@@ -10,6 +10,25 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from user input or existing constitution.
+
+**Detection Rules**:
+1. If `$ARGUMENTS` provided:
+   - **Korean**: Contains Hangul → Write constitution in Korean
+   - **English**: Only Latin characters → Write constitution in English
+   - **Default**: Korean
+2. If updating existing constitution:
+   - Detect language from existing constitution.md
+   - Maintain same language
+3. Use detected language for:
+   - Principle names and descriptions
+   - Section headings
+   - Governance rules
+
+**Consistency Rule**: Constitution language should match project documentation language.
+
 ## Outline
 
 You are updating the project constitution at `.specify/memory/constitution.md`. This file is a TEMPLATE containing placeholder tokens in square brackets (e.g. `[PROJECT_NAME]`, `[PRINCIPLE_1_NAME]`). Your job is to (a) collect/derive concrete values, (b) fill the template precisely, and (c) propagate any amendments across dependent artifacts.

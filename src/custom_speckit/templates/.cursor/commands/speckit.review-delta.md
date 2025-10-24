@@ -12,6 +12,20 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from delta-spec.md and use it for review report.
+
+**Detection Steps**:
+1. Read delta-spec.md to detect language
+2. Use detected language for entire review report:
+   - Section headings
+   - Analysis findings
+   - Recommendations
+   - Risk assessments
+
+**Consistency Rule**: Review report matches delta-spec.md language.
+
 ## Goal
 
 Perform a comprehensive analysis of the delta specification to help reviewers make an informed decision about approving or rejecting the proposed changes.

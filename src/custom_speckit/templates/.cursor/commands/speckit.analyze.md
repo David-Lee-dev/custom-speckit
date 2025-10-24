@@ -12,6 +12,19 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from spec.md and use it for analysis report.
+
+**Detection Steps**:
+1. Read spec.md to detect language
+2. Use detected language for:
+   - Analysis report sections
+   - Findings and recommendations
+   - Issue descriptions
+
+**Consistency Rule**: Analysis report matches spec.md language.
+
 ## Goal
 
 Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/tasks` has successfully produced a complete `tasks.md`.

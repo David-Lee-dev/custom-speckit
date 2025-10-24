@@ -12,6 +12,18 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from spec.md and use it for rejection messages.
+
+**Detection Steps**:
+1. Read spec.md to detect language
+2. Use detected language for:
+   - Rejection confirmation messages
+   - Archive notifications
+
+**Consistency Rule**: Messages match spec.md language.
+
 ## Goal
 
 Reject the pending delta specification and clean up associated files, without modifying the main spec.

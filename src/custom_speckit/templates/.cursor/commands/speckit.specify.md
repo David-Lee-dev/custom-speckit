@@ -12,6 +12,37 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect the language from user input and use it consistently for ALL generated documents.
+
+**Detection Rules**:
+1. Analyze `$ARGUMENTS` for language indicators:
+   - **Korean**: Contains Hangul characters (가-힣, ㄱ-ㅎ, ㅏ-ㅣ) → Use Korean for all content
+   - **English**: Only Latin characters (a-zA-Z) with no Korean → Use English for all content
+   - **Default**: Korean (if empty, ambiguous, or mixed with Korean as primary language)
+
+2. Apply detected language to ALL generated content:
+   - Section headings (예: "## 기능 요구사항" or "## Functional Requirements")
+   - Descriptions, explanations, and narratives
+   - User stories and acceptance criteria
+   - Comments, notes, and clarifications
+   - File content (spec.md, delta-spec.md)
+
+3. **Always maintain English for**:
+   - Code examples (variable names, function names, class names)
+   - Technical identifiers (IDs, tags, keys)
+   - File paths, URLs, and command names
+   - Markdown syntax elements
+
+**Language Detection Examples**:
+- Input: "사용자 인증 기능 추가" → **Korean** (contains 한글) → Write entire spec in Korean
+- Input: "Add user authentication" → **English** (no 한글) → Write entire spec in English
+- Input: "OAuth2 인증 시스템 구현" → **Korean** (contains 한글) → Write in Korean
+- Input: "" (empty) → **Korean** (default) → Write in Korean
+
+**For existing projects**: If spec.md already exists, detect its language from the first 50 lines and use the same language for delta-spec.md to maintain consistency.
+
 ## Outline
 
 The text the user typed after `/speckit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below. Do not ask the user to repeat it unless they provided an empty command.

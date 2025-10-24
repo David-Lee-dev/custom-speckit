@@ -12,6 +12,24 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from spec.md and use it consistently for plan.md.
+
+**Detection Steps**:
+1. Read `.specify/specs/spec.md` (main specification)
+2. Analyze first 50 lines for language indicators:
+   - **Korean**: Contains Hangul (가-힣) → Use Korean for plan.md
+   - **English**: Only Latin characters → Use English for plan.md
+   - **Default**: Korean
+3. Use detected language for ALL plan.md content:
+   - Section headings (예: "## 기술 스택" or "## Tech Stack")
+   - Architecture descriptions
+   - Implementation phases
+   - Technical decisions and rationale
+
+**Consistency Rule**: plan.md MUST match spec.md language to maintain project coherence.
+
 ## Outline
 
 1. **Setup**: 

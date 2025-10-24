@@ -12,6 +12,24 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from plan.md and spec.md, then use it for tasks.md.
+
+**Detection Steps**:
+1. Read plan.md from `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/plan.md`
+2. Analyze for language indicators:
+   - **Korean**: Contains Hangul → Use Korean for tasks.md
+   - **English**: Only Latin characters → Use English for tasks.md
+   - **Default**: Korean
+3. Use detected language for ALL tasks.md content:
+   - Phase names (예: "## Phase 1: 설정" or "## Phase 1: Setup")
+   - Task descriptions
+   - Checkpoint notes
+   - Implementation instructions
+
+**Consistency Rule**: tasks.md MUST match plan.md and spec.md language.
+
 ## Outline
 
 1. **Setup**: 

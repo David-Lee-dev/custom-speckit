@@ -12,6 +12,22 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from tasks.md and use it for code comments and documentation.
+
+**Detection Steps**:
+1. Read tasks.md to detect language
+2. Use detected language for:
+   - Code comments and docstrings (한글 or English)
+   - Commit messages
+   - Documentation strings
+3. **Always use English for**:
+   - Code (variable names, function names, class names)
+   - Technical identifiers
+
+**Consistency Rule**: Comments match tasks.md language, code stays in English.
+
 ## Outline
 
 1. Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").

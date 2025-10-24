@@ -12,6 +12,19 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Language Detection
+
+**CRITICAL**: Detect language from spec.md and use it for clarification questions.
+
+**Detection Steps**:
+1. Read spec.md to detect language
+2. Use detected language for:
+   - Clarification questions
+   - Answer options
+   - Updated spec content
+
+**Consistency Rule**: Questions and answers match spec.md language.
+
 ## Outline
 
 Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
