@@ -1,7 +1,7 @@
 [project]
 name = "custom-speckit"
-version = "1.1.0"
-description = "AI-powered Spec-Driven Development toolkit with delta-based change management"
+version = "1.2.0"
+description = "AI 기반 명세 주도 개발 도구 - Delta 방식의 변경 관리와 한글 문서화 지원"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}

@@ -1,4 +1,4 @@
-"""Custom Speckit - AI-powered Spec-Driven Development toolkit."""
+"""Custom Speckit - AI 기반 Spec-Driven Development 도구."""
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
