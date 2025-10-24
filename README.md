@@ -214,28 +214,67 @@ uvx custom-speckit update --skip-backup
 
 ### Cursor AI 명령어
 
-| 명령어 | 설명 |
-|--------|------|
-| `/speckit.specify` | 명세서 생성/수정 |
-| `/speckit.plan` | 구현 계획 생성 |
-| `/speckit.tasks` | 작업 목록 생성 |
-| `/speckit.implement` | 구현 실행 |
-| `/speckit.review-delta` | Delta 검토 |
-| `/speckit.approve-delta` | Delta 승인 |
-| `/speckit.reject-delta` | Delta 거부 |
-| `/speckit.analyze` | 일관성 분석 |
-| `/speckit.checklist` | 품질 체크리스트 |
+#### 핵심 워크플로우 명령어
+
+| 명령어 | 용도 | 입력 | 출력 | 사용 시점 |
+|--------|------|------|------|----------|
+| `/speckit.specify` | 명세서 생성/수정 | 자연어 요구사항 | `spec.md` 또는 `delta-spec.md` | 프로젝트 시작 또는 기능 추가 시 |
+| `/speckit.plan` | 구현 계획 작성 | (spec.md 읽음) | `features/{version}/{date}_{branch}/plan.md` | 명세 확정 후 설계 단계 |
+| `/speckit.tasks` | 작업 목록 분해 | (plan.md 읽음) | `features/{version}/{date}_{branch}/tasks.md` | 구현 전 작업 분할 |
+| `/speckit.implement` | 실제 구현 실행 | (tasks.md 읽음) | 소스 코드, 테스트, 문서 | 개발 실행 단계 |
+
+#### Delta 관리 명령어 (기존 프로젝트용)
+
+| 명령어 | 용도 | 출력 | 필수 여부 |
+|--------|------|------|----------|
+| `/speckit.review-delta` | Delta 분석 및 영향 평가 | 분석 리포트, Constitution 검증 | 선택 (권장) |
+| `/speckit.approve-delta` | Delta를 spec.md에 병합 | spec.md 업데이트, 백업 생성, CHANGELOG 기록 | **필수** |
+| `/speckit.reject-delta` | Delta 거부 및 삭제 | Delta 삭제 또는 아카이브 | 선택 |
+
+#### 품질 관리 명령어
+
+| 명령어 | 용도 | 출력 |
+|--------|------|------|
+| `/speckit.analyze` | spec/plan/tasks 교차 검증 | 일관성 분석 리포트, 누락/중복 항목 식별 |
+| `/speckit.checklist` | 요구사항 검증 | 수락 기준 체크리스트, 테스트 시나리오 |
+| `/speckit.constitution` | Constitution 정의/수정 | `.specify/memory/constitution.md` |
 
 ### 명령어 실행 순서
 
-**신규 프로젝트:**
+#### 신규 프로젝트
 ```
-specify → plan → tasks → implement
+1. /speckit.specify "요구사항 설명"
+   → .specify/specs/spec.md 생성
+
+2. /speckit.plan
+   → features/v1.0.0/{date}_{branch}/plan.md 생성
+
+3. /speckit.tasks
+   → features/v1.0.0/{date}_{branch}/tasks.md 생성
+
+4. /speckit.implement
+   → 코드 구현, 테스트 작성
 ```
 
-**기존 프로젝트:**
+#### 기존 프로젝트 (기능 추가/수정)
 ```
-specify → review-delta → approve-delta → plan → tasks → implement
+1. /speckit.specify "새 기능 설명"
+   → .specify/.deltas/{branch}/delta-spec.md 생성
+
+2. /speckit.review-delta (선택)
+   → Delta 분석 리포트
+
+3. /speckit.approve-delta
+   → spec.md 업데이트, delta 삭제
+
+4. /speckit.plan
+   → 새 plan.md 생성
+
+5. /speckit.tasks
+   → 새 tasks.md 생성
+
+6. /speckit.implement
+   → 코드 구현
 ```
 
 ## 📁 생성되는 디렉토리
