@@ -147,7 +147,7 @@ Execution steps:
     - Maintain in-memory representation of the spec (loaded once at start) plus the raw file contents.
     - For the first integrated answer in this session:
        * Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
-       * Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
+       * Under it, create (if not present) a `### Session YYYY_MM_DD` subheading for today.
     - Append a bullet line immediately after acceptance: `- Q: <question> → A: <final answer>`.
     - Then immediately apply the clarification to the most appropriate section(s):
        * Functional ambiguity → Update or add a bullet in Functional Requirements.
@@ -166,7 +166,7 @@ Execution steps:
    - Total asked (accepted) questions ≤ 5.
    - Updated sections contain no lingering vague placeholders the new answer was meant to resolve.
    - No contradictory earlier statement remains (scan for now-invalid alternative choices removed).
-   - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY-MM-DD`.
+   - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY_MM_DD`.
    - Terminology consistency: same canonical term used across all updated sections.
 
 7. Write the updated spec back to `FEATURE_SPEC`.

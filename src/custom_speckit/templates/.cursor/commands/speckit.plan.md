@@ -35,9 +35,9 @@ You **MUST** consider the user input before proceeding (if not empty).
 1. **Setup**: 
    a. Run `.specify/scripts/bash/compare-specs.sh --json` to check if delta exists and get paths.
    b. Run `.specify/scripts/bash/get-version.sh --json --auto` to get project version.
-   c. Get current date in YYYY-MM-DD format.
+   c. Get current date in YYYY_MM_DD format (underscore separated).
    d. Get current branch name from compare-specs output.
-   e. Create feature directory path: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+   e. Create feature directory path: `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/`
    f. Create this directory if it doesn't exist.
    
    For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
@@ -58,14 +58,14 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Re-evaluate Constitution Check post-design
 
 4. **Save generated files**: All generated files go to the feature directory:
-   - `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/plan.md` - Implementation plan
-   - `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/research.md` - Research findings (if generated)
-   - `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/data-model.md` - Data model (if generated)
-   - `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/quickstart.md` - Quickstart guide (if generated)
-   - `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/contracts/` - API contracts (if generated)
+   - `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/plan.md` - Implementation plan
+   - `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/research.md` - Research findings (if generated)
+   - `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/data-model.md` - Data model (if generated)
+   - `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/quickstart.md` - Quickstart guide (if generated)
+   - `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/contracts/` - API contracts (if generated)
 
 5. **Stop and report**: Command ends after Phase 2 planning. Report:
-   - Feature directory path: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+   - Feature directory path: `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/`
    - Generated artifacts list
    - Next step: Run `/speckit.tasks` to generate task breakdown
 
@@ -91,7 +91,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Rationale: [why chosen]
    - Alternatives considered: [what else evaluated]
 
-**Output**: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/research.md` with all NEEDS CLARIFICATION resolved
+**Output**: `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/research.md` with all NEEDS CLARIFICATION resolved
 
 ### Phase 1: Design & Contracts
 
@@ -101,16 +101,16 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Entity name, fields, relationships
    - Validation rules from requirements
    - State transitions if applicable
-   - Save to: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/data-model.md`
+   - Save to: `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/data-model.md`
 
 2. **Generate API contracts** from functional requirements:
    - For each user action → endpoint
    - Use standard REST/GraphQL patterns
-   - Output OpenAPI/GraphQL schema to `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/contracts/`
+   - Output OpenAPI/GraphQL schema to `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/contracts/`
 
 3. **Generate quickstart guide**:
    - Create quickstart.md with integration scenarios
-   - Save to: `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/quickstart.md`
+   - Save to: `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/quickstart.md`
 
 4. **Agent context update**:
    - Run `.specify/scripts/bash/update-agent-context.sh cursor-agent`
@@ -119,7 +119,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Add only new technology from current plan
    - Preserve manual additions between markers
 
-**Output**: All files saved to `.specify/features/{VERSION}/{YYYY-MM-DD}_{BRANCH}/`
+**Output**: All files saved to `.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/`
 
 ## Key rules
 

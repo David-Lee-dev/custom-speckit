@@ -120,24 +120,13 @@ Follow-ups: [if any, clearly marked]
 
 ## 7. Git Rules
 
-### Branch & Commit Format
-- **Default branch**: `main`
-- **Commit message format**:
-  - New features: `[Feature: concise description]`
-  - Bug fixes: `[Fix: concise description]`
-  - Describe ONLY changes since last commit (not historical)
+**Git commit 및 브랜치 관리 규칙은 별도 규칙 파일 참조**:
+- 📋 `.cursor/rules/git-commit-guidelines.mdc` - 상세한 Git 워크플로우 규칙
 
-### Workflow
-1. **Before committing**:
-   - Run `git status` to identify changed files
-   - Add ONLY files related to current work: `git add <specific-files>`
-   - ❌ **NEVER use `git add .`**
-
-2. **Before pushing**:
-   - Add sensitive files (env, credentials, resources) to `.gitignore`
-   - Verify only relevant files are staged
-
-3. **Always check current branch** and report before starting work
+**핵심 원칙**:
+- ❌ **NEVER use `git add .`** - 항상 특정 파일만 추가
+- ✅ **Always check current branch** before starting work
+- ✅ Feature 디렉토리명과 브랜치명 일치 (`YYYY_MM_DD-branch-name`)
 
 ---
 

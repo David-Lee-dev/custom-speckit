@@ -1,0 +1,327 @@
+---
+alwaysApply: true
+description: "Git commit 메시지 규칙과 Feature 디렉토리/브랜치 명명 규칙"
+tags:
+  - git
+  - commit
+  - branch
+  - naming
+---
+
+# Git Commit & Branch Guidelines
+
+## 🌿 Feature 디렉토리 & 브랜치 명명 규칙
+
+### Feature 디렉토리 구조
+
+```
+.specify/features/{VERSION}/{YYYY_MM_DD-branch-name}/
+  ├── plan.md
+  ├── tasks.md
+  ├── research.md
+  └── ...
+```
+
+### 명명 규칙
+
+**디렉토리명**: `YYYY_MM_DD-branch-name`
+- 날짜: 언더스코어(`_`)로 구분
+- 브랜치명: 하이픈(`-`)으로 구분
+- 날짜 목적: 디렉토리 정렬 및 시간순 추적
+
+**브랜치명**: `branch-name`
+- 날짜 제외
+- 하이픈(`-`)으로 단어 구분
+- 소문자 사용
+- 간결하고 설명적
+
+**예시**:
+```
+디렉토리: .specify/features/v1.0.0/2025_10_24-user-auth/
+브랜치:   user-auth
+
+디렉토리: .specify/features/v1.2.0/2025_11_15-payment-integration/
+브랜치:   payment-integration
+
+디렉토리: .specify/features/v2.0.0/2025_12_01-api-redesign/
+브랜치:   api-redesign
+```
+
+### 일치 규칙
+
+**CRITICAL**: 디렉토리의 브랜치명 부분과 실제 Git 브랜치명은 **반드시 일치**해야 합니다.
+
+```
+✅ CORRECT:
+  디렉토리: 2025_10_24-user-auth
+  브랜치:   user-auth
+  → 브랜치명 부분 일치 ✓
+
+❌ WRONG:
+  디렉토리: 2025_10_24-user-auth
+  브랜치:   user-authentication
+  → 불일치 ✗
+```
+
+---
+
+## 📝 Commit 메시지 규칙
+
+### 기본 형식
+
+```
+[Type] 간결한 제목 (50자 이내)
+
+- 상세 내용 1
+- 상세 내용 2
+- 상세 내용 3
+```
+
+### Commit Type
+
+| Type | 용도 | 예시 |
+|------|------|------|
+| `[Feature]` | 새로운 기능 추가 | `[Feature] 사용자 인증 기능 추가` |
+| `[Fix]` | 버그 수정 | `[Fix] 로그인 에러 수정` |
+| `[Refactor]` | 코드 리팩토링 | `[Refactor] 인증 로직 개선` |
+| `[Docs]` | 문서 변경 | `[Docs] README 업데이트` |
+| `[Style]` | 코드 스타일 변경 | `[Style] 코드 포맷팅` |
+| `[Test]` | 테스트 추가/수정 | `[Test] 인증 테스트 추가` |
+| `[Chore]` | 빌드/설정 변경 | `[Chore] 의존성 업데이트` |
+| `[Release]` | 버전 릴리스 | `[Release] v1.3.0 릴리스` |
+
+### 제목 작성 규칙
+
+1. **Type 필수**: 모든 커밋은 Type으로 시작
+2. **간결성**: 50자 이내 (한글 25자 이내)
+3. **명확성**: 무엇을 변경했는지 명확히
+4. **명령형**: "추가", "수정", "개선" (완료형 ❌)
+5. **마침표 없음**: 제목 끝에 마침표 사용 안 함
+
+### 본문 작성 규칙
+
+1. **대시(`-`) 사용**: 각 항목은 대시로 시작
+2. **구체적 설명**: 변경 이유와 내용 설명
+3. **한 줄에 하나**: 각 항목은 별도 줄로
+4. **빈 줄 유지**: 제목과 본문 사이 빈 줄 필수
+
+### 예시
+
+#### ✅ GOOD: Feature 추가
+
+```
+[Feature] 사용자 인증 기능 추가
+
+- JWT 기반 토큰 인증 구현
+- 로그인/로그아웃 API 엔드포인트 추가
+- 토큰 갱신 로직 구현
+- 인증 미들웨어 추가
+```
+
+#### ✅ GOOD: 버그 수정
+
+```
+[Fix] 로그인 시 토큰 만료 에러 수정
+
+- 토큰 만료 시간 검증 로직 개선
+- 만료 토큰 자동 갱신 기능 추가
+- 에러 메시지 명확화
+```
+
+#### ✅ GOOD: 리팩토링
+
+```
+[Refactor] 인증 서비스 구조 개선
+
+- 인증 로직을 별도 서비스로 분리
+- 중복 코드 제거 및 함수 통합
+- 타입 안정성 향상
+```
+
+#### ❌ BAD: Type 없음
+
+```
+사용자 인증 기능 추가
+
+- JWT 기반 토큰 인증 구현
+```
+
+#### ❌ BAD: 불명확한 제목
+
+```
+[Feature] 수정
+
+- 여러 가지 수정함
+```
+
+#### ❌ BAD: 본문에 대시 없음
+
+```
+[Feature] 사용자 인증 기능 추가
+
+JWT 기반 토큰 인증 구현
+로그인/로그아웃 API 추가
+토큰 갱신 로직 구현
+```
+
+---
+
+## 🔄 Workflow 예시
+
+### 신규 Feature 개발
+
+```bash
+# 1. 브랜치 생성
+git checkout -b user-auth
+
+# 2. 작업 (디렉토리 자동 생성됨)
+/speckit.specify "사용자 인증 기능"
+/speckit.plan
+/speckit.tasks
+# → .specify/features/v1.0.0/2025_10_24-user-auth/ 생성됨
+
+# 3. 코드 구현
+/speckit.implement
+
+# 4. Commit
+git add src/auth/
+git commit -m "[Feature] 사용자 인증 기능 구현
+
+- JWT 토큰 기반 인증 로직
+- 로그인/로그아웃 엔드포인트
+- 인증 미들웨어 추가"
+
+# 5. Push
+git push origin user-auth
+```
+
+### 버그 수정
+
+```bash
+# 1. 브랜치 생성
+git checkout -b fix-login-error
+
+# 2. 수정 작업
+# 코드 수정...
+
+# 3. Commit
+git add src/auth/login.ts
+git commit -m "[Fix] 로그인 토큰 만료 에러 수정
+
+- 토큰 검증 로직 개선
+- 만료 시 자동 갱신 추가"
+
+# 4. Push
+git push origin fix-login-error
+```
+
+---
+
+## 📊 디렉토리-브랜치 매칭 검증
+
+### 자동 검증 (권장)
+
+AI 에이전트가 `/speckit.plan` 실행 시 자동으로 확인:
+
+```
+브랜치명: user-auth
+디렉토리: 2025_10_24-user-auth
+→ ✅ 일치
+
+브랜치명: payment
+디렉토리: 2025_10_24-payment-integration
+→ ❌ 불일치 (경고 표시)
+```
+
+### 수동 검증
+
+```bash
+# 현재 브랜치 확인
+git branch --show-current
+
+# Feature 디렉토리 확인
+ls -la .specify/features/v*/*/*/
+
+# 일치 여부 확인
+# 디렉토리의 날짜 이후 부분 = 브랜치명
+```
+
+---
+
+## 🚫 금지 사항
+
+### Commit 메시지
+
+❌ Type 없이 커밋
+❌ "수정", "작업" 같은 모호한 제목
+❌ 본문 없이 제목만
+❌ 너무 긴 제목 (50자 초과)
+❌ 여러 Type 혼합 (`[Feature][Fix]`)
+
+### 디렉토리/브랜치
+
+❌ 디렉토리와 브랜치명 불일치
+❌ 날짜 없는 디렉토리명
+❌ 대문자 사용 (소문자만)
+❌ 공백 사용 (하이픈으로 대체)
+❌ 특수문자 사용 (하이픈만 허용)
+
+---
+
+## 💡 Best Practices
+
+### 1. Atomic Commits
+- 하나의 논리적 변경 = 하나의 커밋
+- 관련 없는 변경사항은 별도 커밋
+
+### 2. 의미 있는 메시지
+- "작업", "수정" 같은 모호한 단어 지양
+- 구체적인 변경 내용 명시
+
+### 3. 일관성 유지
+- 프로젝트 전체에서 동일한 규칙 적용
+- Type 표기법 통일
+
+### 4. 리뷰 친화적
+- 리뷰어가 이해하기 쉬운 메시지
+- 변경 이유와 영향도 명시
+
+---
+
+## 🔧 Git Hooks (선택)
+
+### Commit Message 검증 (권장)
+
+`.git/hooks/commit-msg` 생성:
+
+```bash
+#!/bin/bash
+
+commit_msg_file=$1
+commit_msg=$(cat "$commit_msg_file")
+
+# Type 검증
+if ! echo "$commit_msg" | grep -qE '^\[(Feature|Fix|Refactor|Docs|Style|Test|Chore|Release)\]'; then
+  echo "ERROR: Commit message must start with a type: [Feature], [Fix], etc."
+  exit 1
+fi
+
+# 제목 길이 검증
+title=$(echo "$commit_msg" | head -n 1)
+if [ ${#title} -gt 72 ]; then
+  echo "WARNING: Commit title is longer than 72 characters"
+fi
+
+exit 0
+```
+
+실행 권한 부여:
+```bash
+chmod +x .git/hooks/commit-msg
+```
+
+---
+
+**Last Updated**: 2025-10-24  
+**Version**: 1.0  
+**Applies to**: All Git operations in Custom Speckit projects

@@ -127,7 +127,7 @@ Create/append to rejection log for audit purposes:
 **Format**:
 ```
 ---
-Date: {YYYY-MM-DD HH:MM:SS}
+Date: {YYYY_MM_DD HH:MM:SS}
 Branch: {CURRENT_BRANCH}
 Action: REJECTED
 Archived: {YES/NO}

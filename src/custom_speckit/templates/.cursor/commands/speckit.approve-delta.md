@@ -122,7 +122,7 @@ After successful merge, document the change:
 ```markdown
 ## {Feature Name} - {CURRENT_BRANCH}
 
-**Date**: {YYYY-MM-DD HH:MM:SS}  
+**Date**: {YYYY_MM_DD HH:MM:SS}  
 **Branch**: {CURRENT_BRANCH}  
 **Applied By**: AI Agent / {User Name}
 
