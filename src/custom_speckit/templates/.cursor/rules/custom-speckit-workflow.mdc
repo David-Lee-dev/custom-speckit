@@ -33,13 +33,21 @@ tags:
 - These are **temporary** - automatically cleaned after approval/rejection
 - **DO NOT** commit `.specify/.deltas/` to version control (add to .gitignore)
 
-### Development History (Permanent)
-- **`.specify/features/{version}/{YYYY_MM_DD-branch}/`** - Historical record of development
-  - `plan.md` - Implementation plan for this feature
-  - `tasks.md` - Task breakdown for this feature
-  - Optional: `research.md`, `data-model.md`, `contracts/`, `quickstart.md`
-- Format: `.specify/features/v1.0.0/2025_01_20-feature-name/`
-- These are **permanent** - commit to version control
+### Project Skeleton (Permanent, No Versioning)
+- **`.specify/specs/`** - Project-wide skeleton files (single source of truth)
+  - `spec.md` - Complete feature specification
+  - `tech-stack.md` - Technology stack and tools (created/updated as needed)
+  - `data-model.md` - Complete data model (entities added/updated as needed)
+  - `contracts/` - API contracts (endpoints added/updated as needed)
+- These files are **cumulative** - updated without versioning
+- Changes tracked via Git and internal change history
+
+### Development History (Permanent, Versioned)
+- **`.specify/features/{version}/{YYYY_MM_DD-branch}/`** - Feature implementation records
+  - `plan.md` - Implementation plan for this feature ONLY
+  - `tasks.md` - Task breakdown for this feature ONLY
+- Format: `.specify/features/v1.0.0/2025_10_28-feature-name/`
+- These are **permanent** snapshots - commit to version control, never modify after creation
 
 ---
 
@@ -164,17 +172,18 @@ All commands MUST run these scripts in order:
 When loading context, read files in this priority:
 
 **Primary (ALWAYS):**
-1. `.specify/specs/spec.md` - Main specification
+1. `.specify/specs/spec.md` - Complete feature specification
 2. `.specify/memory/constitution.md` - Project principles
 
-**Feature-Specific (if exists):**
-3. `.specify/.specify/.deltas/{branch}/delta-spec.md` - Current changes
-4. `.specify/features/{version}/{date}_{branch}/plan.md` - Current plan
+**Project Skeleton (if exists):**
+3. `.specify/specs/tech-stack.md` - Technology stack and tools
+4. `.specify/specs/data-model.md` - Complete data model
+5. `.specify/specs/contracts/` - API contracts
 
-**Optional (if available):**
-5. `.specify/features/{version}/{date}_{branch}/data-model.md`
-6. `.specify/features/{version}/{date}_{branch}/contracts/`
-7. `.specify/features/{version}/{date}_{branch}/research.md`
+**Feature-Specific (if exists):**
+6. `.specify/.deltas/{branch}/delta-spec.md` - Pending changes
+7. `.specify/features/{version}/{YYYY_MM_DD-branch}/plan.md` - Current feature's plan
+8. `.specify/features/{version}/{YYYY_MM_DD-branch}/tasks.md` - Current feature's tasks
 
 ### Rule 4: Save Location Verification
 
@@ -183,10 +192,12 @@ Before saving ANY file, verify the correct location:
 | File Type | Correct Location | WRONG Location |
 |-----------|------------------|----------------|
 | spec.md | `.specify/specs/spec.md` | ❌ `specs/{branch}/spec.md` |
-| delta-spec.md | `.specify/.specify/.deltas/{branch}/delta-spec.md` | ❌ `.specify/specs/` |
-| plan.md | `.specify/features/{version}/{date}_{branch}/plan.md` | ❌ `specs/{branch}/` |
-| tasks.md | `.specify/features/{version}/{date}_{branch}/tasks.md` | ❌ `specs/{branch}/` |
-| data-model.md | `.specify/features/{version}/{date}_{branch}/data-model.md` | ❌ `specs/{branch}/` |
+| tech-stack.md | `.specify/specs/tech-stack.md` | ❌ `features/{version}/{date}-{branch}/` |
+| data-model.md | `.specify/specs/data-model.md` | ❌ `features/{version}/{date}-{branch}/` |
+| contracts/ | `.specify/specs/contracts/` | ❌ `features/{version}/{date}-{branch}/` |
+| delta-spec.md | `.specify/.deltas/{branch}/delta-spec.md` | ❌ `.specify/specs/` |
+| plan.md | `.specify/features/{version}/{YYYY_MM_DD-branch}/plan.md` | ❌ `specs/` |
+| tasks.md | `.specify/features/{version}/{YYYY_MM_DD-branch}/tasks.md` | ❌ `specs/` |
 
 ---
 
@@ -426,27 +437,31 @@ Manual review/editing
 ### File Locations
 
 ```
-specs/
-  spec.md ← ONLY spec file (single source of truth)
-  CHANGELOG.md ← Change history
-  .backups/ ← Auto-generated backups
-
-.specify/.deltas/ ← TEMPORARY (add to .gitignore)
-  {branch}/
-    delta-spec.md
-    changes-summary.md
-    review-checklist.md
-
-.specify/features/ ← PERMANENT (commit to git)
-  {version}/
-    {date}_{branch}/
-      plan.md
-      tasks.md
-      research.md
-      data-model.md
-      quickstart.md
-      contracts/
+.specify/
+├── specs/                          ← PROJECT SKELETON (no versioning)
+│   ├── spec.md                    ← Complete feature specification
+│   ├── tech-stack.md              ← Technology stack (cumulative)
+│   ├── data-model.md              ← Data model (cumulative)
+│   ├── contracts/                 ← API contracts (cumulative)
+│   ├── CHANGELOG.md               ← Change history
+│   └── .backups/                  ← Auto-generated backups
+│
+├── .deltas/                        ← TEMPORARY (add to .gitignore)
+│   └── {branch}/
+│       ├── delta-spec.md
+│       ├── changes-summary.md
+│       └── review-checklist.md
+│
+└── features/                       ← FEATURE HISTORY (versioned)
+    └── {version}/
+        └── {YYYY_MM_DD-branch}/
+            ├── plan.md            ← This feature's plan
+            └── tasks.md           ← This feature's tasks
 ```
+
+**Key Principle**: 
+- `specs/` = Project-wide skeleton, updated cumulatively
+- `features/` = Feature snapshots, never modified after creation
 
 ### Scripts to Run
 

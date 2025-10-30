@@ -42,19 +42,22 @@ You **MUST** consider the user input before proceeding (if not empty).
    All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Load design documents**: 
-   - **From main spec** (`.specify/specs/spec.md`): User stories with priorities, requirements
+   - **From specs directory** (`.specify/specs/`):
+     * **Required**: `spec.md` (user stories with priorities, requirements)
+     * **Optional**: `tech-stack.md` (technology stack and tools)
+     * **Optional**: `data-model.md` (entities and relationships)
+     * **Optional**: `contracts/` (API contracts and endpoints)
    - **From feature directory** (`.specify/features/{VERSION}/{YYYY_MM_DD-BRANCH}/`):
-     * **Required**: plan.md (tech stack, libraries, structure)
-     * **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
+     * **Required**: `plan.md` (this feature's implementation plan)
    - **If delta exists** (`.specify/.deltas/{BRANCH}/delta-spec.md`): Load to understand what's changing in this feature
    - Note: Not all projects have all documents. Generate tasks based on what's available.
 
 3. **Execute task generation workflow**:
-   - Load plan.md and extract tech stack, libraries, project structure
-   - Load spec.md and extract user stories with their priorities (P1, P2, P3, etc.)
-   - If data-model.md exists: Extract entities and map to user stories
-   - If contracts/ exists: Map endpoints to user stories
-   - If research.md exists: Extract decisions for setup tasks
+   - Load plan.md from features/ (this feature's implementation plan)
+   - Load spec.md from specs/ (user stories with priorities)
+   - Load tech-stack.md from specs/ (if exists: technology stack and tools)
+   - Load data-model.md from specs/ (if exists: entities and map to user stories)
+   - Load contracts/ from specs/ (if exists: map endpoints to user stories)
    - Generate tasks organized by user story (see Task Generation Rules below)
    - Generate dependency graph showing user story completion order
    - Create parallel execution examples per user story

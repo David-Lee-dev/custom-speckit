@@ -8,11 +8,12 @@
 
 프로젝트의 명세서를 **단일 진실의 원천**으로 관리하고, 변경사항을 **Delta 방식**으로 추적하여 안전하게 개선하는 도구입니다.
 
-> **✨ v1.3.1 업데이트**
-> - 🌐 **자동 언어 감지**: 사용자 입력 언어에 따라 자동으로 한글/영어 문서 생성
-> - 🇰🇷 **한글 우선**: 기본값은 한글, 영어 입력 시 자동으로 영어 문서 작성
-> - 🔄 **일관성 유지**: 프로젝트 전체 문서가 동일한 언어로 유지됨
-> - 📝 **Git 규칙 강화**: Feature 디렉토리(`YYYY_MM_DD-branch`) 및 Commit 메시지 규칙 명확화
+> **✨ v1.3.2 업데이트**
+> - 📁 **디렉토리 구조 개선**: specs/는 프로젝트 뼈대(누적), features/는 구현 기록(스냅샷)
+> - 🔧 **tech-stack.md**: 기술 스택을 specs/에서 중앙 관리, 변경 이력 추적
+> - 📊 **data-model.md**: 전체 데이터 모델을 specs/에서 관리, 엔티티 누적
+> - 🔌 **contracts/**: API 스펙을 specs/에서 관리, 엔드포인트 누적
+> - 🎯 **features/ 간소화**: plan.md, tasks.md만 보관 (기술 스펙은 specs/로 이동)
 
 **특징:**
 - 🌐 **언어 무관** - Node.js, Rust, Python, Go 등 모든 프로젝트에서 사용
@@ -314,10 +315,16 @@ uvx custom-speckit update --skip-backup
 ```
 your-project/
 ├── .specify/
-│   ├── specs/          # 최종 명세서 (spec.md)
-│   ├── features/       # 개발 이력 (plan.md, tasks.md)
+│   ├── specs/              # 프로젝트 뼈대 (버전 관리 없이 누적)
+│   │   ├── spec.md         # 전체 기능 명세
+│   │   ├── tech-stack.md   # 기술 스택 (최초 생성, 추가 시 수정)
+│   │   ├── data-model.md   # 데이터 모델 (엔티티 누적)
+│   │   └── contracts/      # API 계약 (엔드포인트 누적)
+│   ├── features/           # Feature별 구현 기록
 │   │   └── v1.0.0/
-│   │       └── 2025_10_24-user-auth/  # YYYY_MM_DD-branch 형식
+│   │       └── 2025_10_24-user-auth/
+│   │           ├── plan.md    # 이 feature의 구현 계획
+│   │           └── tasks.md   # 이 feature의 작업 목록
 │   ├── memory/         # Constitution (프로젝트 원칙)
 │   ├── scripts/        # 헬퍼 스크립트
 │   └── templates/      # 문서 템플릿
@@ -325,6 +332,116 @@ your-project/
     ├── commands/       # Speckit 명령어
     └── rules/          # 워크플로우 규칙
 ```
+
+### 📊 디렉토리 역할
+
+#### **specs/ - 프로젝트 뼈대** (Single Source of Truth)
+- ✅ 프로젝트 전체에서 공유
+- ✅ 버전 디렉토리 없음 (항상 최신)
+- ✅ 누적 업데이트 (변경 이력은 파일 내부에 기록)
+- 예: 새 엔티티 추가 시 `data-model.md`에 추가, MongoDB 도입 시 `tech-stack.md` 수정
+
+#### **features/ - Feature 구현 기록** (Historical Snapshots)
+- ✅ Feature별로 버전/날짜 디렉토리 분리
+- ✅ plan.md, tasks.md만 보관
+- ✅ 한 번 생성 후 수정 안 함 (이력 보존)
+- 예: `v1.0.0/2025_10_24-user-auth/plan.md` → user-auth feature의 구현 계획만
+
+---
+
+## 🔄 개발 시나리오
+
+### **최초 프로젝트 개발**
+
+```bash
+# 1. 명세 생성
+/speckit.specify "할 일 관리 앱"
+→ .specify/specs/spec.md
+
+# 2. 계획 수립
+/speckit.plan
+→ .specify/specs/tech-stack.md     (React, Node.js 결정)
+→ .specify/specs/data-model.md     (User, Task 엔티티)
+→ .specify/specs/contracts/        (API 스펙)
+→ .specify/features/v1.0.0/2025_10_28-todo-app/plan.md
+
+# 3. 작업 생성
+/speckit.tasks
+→ .specify/features/v1.0.0/2025_10_28-todo-app/tasks.md
+   (specs/의 tech-stack, data-model, contracts 참조)
+```
+
+**결과**:
+```
+.specify/
+├── specs/
+│   ├── spec.md           # 할 일 관리 명세
+│   ├── tech-stack.md     # React, Node.js
+│   ├── data-model.md     # User, Task
+│   └── contracts/        # user.yaml, task.yaml
+└── features/v1.0.0/2025_10_28-todo-app/
+    ├── plan.md
+    └── tasks.md
+```
+
+### **추가 기능 개발 (기존 기술 사용)**
+
+```bash
+# 1. 기능 추가
+/speckit.specify "댓글 기능 추가"
+/speckit.approve-delta
+→ .specify/specs/spec.md (댓글 요구사항 병합)
+
+# 2. 계획 수립
+/speckit.plan
+→ .specify/specs/tech-stack.md     (변경 없음)
+→ .specify/specs/data-model.md     (Comment 엔티티 추가)
+→ .specify/specs/contracts/        (comment.yaml 추가)
+→ .specify/features/v1.1.0/2025_11_05-comment/plan.md
+
+# 3. 작업 생성
+/speckit.tasks
+→ .specify/features/v1.1.0/2025_11_05-comment/tasks.md
+```
+
+**결과**:
+```
+.specify/
+├── specs/                # 누적 업데이트
+│   ├── spec.md          # Todo + Comment
+│   ├── tech-stack.md    # React, Node.js (동일)
+│   ├── data-model.md    # User, Task, Comment
+│   └── contracts/       # user, task, comment
+└── features/
+    ├── v1.0.0/2025_10_28-todo-app/
+    └── v1.1.0/2025_11_05-comment/  # 추가됨
+```
+
+### **기술 스택 변경**
+
+```bash
+# 1. 검색 기능 (MongoDB 도입)
+/speckit.specify "전문 검색 기능"
+/speckit.approve-delta
+
+# 2. 계획 수립
+/speckit.plan
+→ .specify/specs/tech-stack.md     (MongoDB 추가됨!)
+→ .specify/specs/data-model.md     (SearchIndex 추가)
+→ .specify/specs/contracts/        (search.yaml 추가)
+→ .specify/features/v1.2.0/2025_11_20-search/plan.md
+```
+
+**tech-stack.md 변경 예시**:
+```markdown
+## Database
+- PostgreSQL 15.x - 메인 DB
+- MongoDB 7.x - 검색 엔진
+  * Added: 2025_11_20 (search)
+  * Reason: 전문 검색 최적화
+```
+
+---
 
 ## 🌿 Git 워크플로우
 
