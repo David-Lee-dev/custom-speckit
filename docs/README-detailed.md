@@ -10,18 +10,19 @@
 
 1. [Spec-Driven Development란?](#-spec-driven-development란)
 2. [왜 기획서를 먼저 작성해야 하나요?](#-왜-기획서를-먼저-작성해야-하나요)
-3. [Custom Speckit 특징](#-custom-speckit-특징)
-4. [설치 방법](#-설치-방법)
-5. [Constitution 작성 가이드](#-constitution-작성-가이드)
-6. [개발 워크플로우](#-개발-워크플로우)
-7. [전체 명령어 레퍼런스](#-전체-명령어-레퍼런스)
-8. [개발 시나리오](#-개발-시나리오)
-9. [디렉토리 구조](#-디렉토리-구조)
-10. [Git 워크플로우](#-git-워크플로우)
-11. [언어 자동 감지](#-언어-자동-감지)
-12. [고급 기능](#-고급-기능)
-13. [트러블슈팅](#-트러블슈팅)
-14. [FAQ](#-faq)
+3. [Augmented Coding (TDD)](#-augmented-coding-tdd)
+4. [Custom Speckit 특징](#-custom-speckit-특징)
+5. [설치 방법](#-설치-방법)
+6. [Constitution 작성 가이드](#-constitution-작성-가이드)
+7. [개발 워크플로우](#-개발-워크플로우)
+8. [전체 명령어 레퍼런스](#-전체-명령어-레퍼런스)
+9. [개발 시나리오](#-개발-시나리오)
+10. [디렉토리 구조](#-디렉토리-구조)
+11. [Git 워크플로우](#-git-워크플로우)
+12. [언어 자동 감지](#-언어-자동-감지)
+13. [고급 기능](#-고급-기능)
+14. [트러블슈팅](#-트러블슈팅)
+15. [FAQ](#-faq)
 
 ---
 
@@ -141,6 +142,289 @@ AI: [명세 기반으로 정확한 코드 생성]
 - 왜 이 결정을 했는지 기록
 - 언제 무엇이 추가되었는지 추적
 - 새 팀원 온보딩 쉬움
+
+---
+
+## 🧪 Augmented Coding (TDD)
+
+> **"코드 품질을 중시하는 AI 협업 - Kent Beck의 방법론"**
+
+Custom Speckit은 Kent Beck의 [Augmented Coding](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes) 방법론을 지원합니다.
+
+### Vibe Coding vs Augmented Coding
+
+#### ❌ **Vibe Coding** (피해야 할 방식)
+
+```
+개발자: "로그인 기능 만들어줘"
+AI: [코드 생성]
+개발자: "에러 나네..."
+AI: [수정]
+개발자: "또 에러..."
+AI: [또 수정]
+...
+```
+
+**문제점**:
+- 코드 품질 무시, 동작만 중시
+- AI가 생성한 코드를 무조건 수용
+- 에러 → 재시도 반복
+- 설계 결정권 없음
+- 복잡도 누적
+
+---
+
+#### ✅ **Augmented Coding** (권장 방식)
+
+```
+개발자: "User.create() 테스트 작성"
+AI: [테스트 작성] → 실패 확인
+개발자: "go"
+AI: [최소 구현] → 테스트 통과
+개발자: "go"
+AI: [리팩토링] → 코드 정리
+→ 깔끔한 코드 완성
+```
+
+**장점**:
+- ✅ 코드 품질, 복잡도, 테스트 커버리지 중시
+- ✅ 수작업 코딩과 동일한 가치 체계
+- ✅ 개발자가 설계 결정 (AI는 보조)
+- ✅ 깔끔하고 동작하는 코드
+
+---
+
+### TDD 사이클 (Red → Green → Refactor)
+
+Custom Speckit의 `/speckit.implement`는 TDD를 기본으로 사용합니다:
+
+#### 🔴 **Red - 실패하는 테스트 작성**
+
+```bash
+/speckit.implement
+
+AI: "다음 작업: US1-할일추가"
+AI: "테스트 작성 중..."
+
+# tests/test_task.py
+def test_should_create_task_with_title():
+    task = Task.create(title="Buy milk")
+    assert task.title == "Buy milk"
+
+Running tests... ❌ FAILED
+- NameError: Task not defined
+
+테스트 작성 완료. "go"를 입력하여 구현하세요.
+```
+
+---
+
+#### 🟢 **Green - 최소 구현**
+
+```bash
+User: "go"
+
+AI: "최소 구현 작성 중..."
+
+# src/models/task.py
+class Task:
+    def __init__(self, title):
+        self.title = title
+    
+    @classmethod
+    def create(cls, title):
+        return cls(title)
+
+Running tests... ✅ PASSED
+
+구현 완료. "go"로 리팩토링 또는 다음 테스트로 이동.
+```
+
+---
+
+#### 🔵 **Refactor - 코드 정리**
+
+```bash
+User: "go"
+
+AI: "리팩토링 기회 확인..."
+AI: "발견: dataclass 사용하면 더 간결"
+
+# src/models/task.py
+from dataclasses import dataclass
+
+@dataclass
+class Task:
+    title: str
+    
+    @classmethod
+    def create(cls, title):
+        return cls(title)
+
+Running tests... ✅ PASSED
+
+리팩토링 완료. 다음 테스트 준비됨.
+```
+
+---
+
+### "go" 명령 패턴
+
+Kent Beck 스타일의 단계적 개발:
+
+```bash
+# 1. /speckit.implement 시작
+/speckit.implement
+
+# 2. 테스트 작성 (Red)
+AI: "테스트 작성 완료, 실패 확인"
+User: "go"
+
+# 3. 구현 (Green)
+AI: "구현 완료, 테스트 통과"
+User: "go"
+
+# 4. 리팩토링 (Refactor)
+AI: "리팩토링 완료"
+User: "go"
+
+# 5. 다음 테스트
+AI: "다음 테스트 작성..."
+User: "go"
+
+# ... 반복
+```
+
+---
+
+### 경고 신호 🚨
+
+AI가 다음과 같이 동작하면 **즉시 중단**:
+
+#### 1. **루프에 빠짐**
+```
+AI: [같은 에러 반복]
+AI: [같은 수정 반복]
+```
+→ **중단**, 접근 방식 재검토
+
+#### 2. **요청하지 않은 기능 구현**
+```
+테스트: create() 테스트
+AI: create(), update(), delete() 모두 구현  # ❌
+```
+→ **중단**, 초과 기능 제거
+
+#### 3. **테스트 수정/삭제**
+```
+AI: "이 테스트가 실패하니까 삭제하겠습니다"  # ❌
+```
+→ **즉시 중단**, 테스트는 스펙, 구현을 수정
+
+---
+
+### Tidy First (구조 vs 기능 분리)
+
+#### 커밋 분리 원칙
+
+**구조 변경** (Structural):
+```bash
+git commit -m "[Refactor] 검증 로직을 별도 함수로 추출
+
+- createUser에서 validateUserInput으로 분리
+- 동작 변경 없음
+- 모든 테스트 통과"
+```
+
+**기능 변경** (Behavioral):
+```bash
+git commit -m "[Feature] 이메일 검증 추가
+
+- 테스트: shouldRejectInvalidEmail
+- 구현: User.create()에서 이메일 형식 검증
+- 모든 테스트 통과"
+```
+
+**절대 금지**:
+```bash
+# ❌ 구조 + 기능 혼합
+git commit -m "리팩토링 + 새 기능 추가"
+```
+
+---
+
+### 코드 품질 기준
+
+✅ **통과 조건**:
+- 모든 테스트 통과 (100% green)
+- 테스트 커버리지 ≥ 80%
+- 컴파일러/린터 경고 0개
+- 코드 단순하고 명확
+- 중복 제거됨
+- 각 함수가 단일 책임
+
+---
+
+### 실전 예시 (Todo 앱)
+
+```bash
+# Phase 3: US1 - 할 일 추가 시작
+/speckit.implement
+
+AI: "T007 [US1] Task 모델 테스트 작성"
+
+# 🔴 Red
+test_task.py:
+def test_should_create_task():
+    task = Task.create(title="Buy milk")
+    assert task.title == "Buy milk"
+
+❌ FAILED - Task not defined
+
+User: "go"
+
+# 🟢 Green
+AI: "최소 구현..."
+task.py:
+class Task:
+    def __init__(self, title):
+        self.title = title
+    
+    @classmethod
+    def create(cls, title):
+        return cls(title)
+
+✅ PASSED
+
+User: "go"
+
+# 🔵 Refactor
+AI: "dataclass로 간소화..."
+task.py:
+from dataclasses import dataclass
+
+@dataclass
+class Task:
+    title: str
+    
+    @classmethod
+    def create(cls, title):
+        return cls(title)
+
+✅ PASSED
+
+AI: "T007 완료. 다음: T008 Task API"
+```
+
+---
+
+### 참고 자료
+
+- 📖 [Kent Beck - Augmented Coding](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)
+- 📖 [Test-Driven Development by Example](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530) - Kent Beck
+- 📖 [Tidy First?](https://www.oreilly.com/library/view/tidy-first/9781098151232/) - Kent Beck
+- 📁 `.cursor/rules/tdd-augmented-coding.mdc` - 전체 TDD 규칙
+- 📁 `.specify/templates/tdd-cycle.md` - TDD 사이클 가이드
 
 ---
 

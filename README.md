@@ -6,6 +6,12 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **✨ v1.5.0 - Kent Beck의 TDD 지원**
+> - 🧪 **Test-Driven Development**: Red-Green-Refactor 사이클 기본 지원
+> - 🎯 **Augmented Coding**: 코드 품질을 중시하는 AI 협업 ([Kent Beck](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes))
+> - 💡 **"go" 명령 패턴**: 한 테스트씩 단계적 개발
+> - 🔧 **Spec-Kit v0.0.85**: CDPATH 버그 수정 반영
+
 ---
 
 ## 📖 문서 선택

@@ -14,9 +14,20 @@
 <!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
 ### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+<!-- Example: III. Test-First Development (NON-NEGOTIABLE) -->
 [PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+<!-- 
+Example (Kent Beck's TDD):
+- TDD mandatory: Red → Green → Refactor cycle
+- Tests written BEFORE implementation (no exceptions)
+- One test at a time, make it pass, then refactor
+- Test coverage ≥ 80% (measured by coverage tool)
+- All tests must pass before commit
+- Structural changes (refactoring) and behavioral changes (features) committed separately
+- Minimum code to pass tests - resist over-implementation
+- Tidy First: Separate structural changes from behavioral changes
+-->
+
 
 ### [PRINCIPLE_4_NAME]
 <!-- Example: IV. Integration Testing -->

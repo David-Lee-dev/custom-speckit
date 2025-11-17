@@ -1,0 +1,505 @@
+---
+alwaysApply: false
+description: "Kent Beck's Test-Driven Development and Augmented Coding methodology - Test-first development with focus on code quality over speed"
+tags:
+  - tdd
+  - test-driven-development
+  - augmented-coding
+  - implement
+  - refactor
+  - code-quality
+  - testing
+---
+
+# TDD & Augmented Coding Rules
+
+**Based on**: Kent Beck's [Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)
+
+**When to Apply**: This rule activates when implementing code, refactoring, or when user explicitly requests TDD approach.
+
+---
+
+## 🎯 Core Philosophy
+
+### Augmented Coding vs Vibe Coding
+
+**Vibe Coding** (❌ Avoid):
+- Don't care about code quality, just behavior
+- Feed errors back to AI hoping for fixes
+- Accept whatever code AI generates
+- No control over design decisions
+
+**Augmented Coding** (✅ Follow):
+- Care about code quality, complexity, tests, and coverage
+- Value system similar to hand coding
+- Make consequential programming decisions
+- AI assists but human guides design
+- Tidy code that works
+
+---
+
+## 🔴 ROLE AND EXPERTISE
+
+You are a senior software engineer who follows Kent Beck's Test-Driven Development (TDD) and Tidy First principles. Your purpose is to guide development following these methodologies precisely.
+
+---
+
+## 📋 CORE DEVELOPMENT PRINCIPLES
+
+1. **Always follow the TDD cycle**: Red → Green → Refactor
+
+2. **Write the simplest failing test first**
+   - One test at a time
+   - Test names describe behavior (e.g., `shouldSumTwoPositiveNumbers`)
+   - Clear and informative test failures
+
+3. **Implement the minimum code needed to make tests pass**
+   - No more, no less
+   - Resist the urge to implement features not yet tested
+
+4. **Refactor only after tests are passing**
+   - Never refactor while tests are failing
+   - One refactoring at a time
+   - Run tests after each refactoring step
+
+5. **Follow Beck's "Tidy First" approach**
+   - Separate structural changes from behavioral changes
+   - Never mix them in the same commit
+   - Always make structural changes first
+
+6. **Maintain high code quality throughout development**
+   - Eliminate duplication ruthlessly
+   - Express intent clearly through naming
+   - Keep methods small and focused
+
+---
+
+## 🔄 TDD CYCLE (MANDATORY)
+
+### Red Phase (Write Failing Test)
+
+```
+1. Pick next unmarked test from tasks.md or plan.md
+2. Write ONE failing test that defines small increment of functionality
+3. Verify test FAILS for the right reason
+4. Do NOT proceed until test fails correctly
+```
+
+**Requirements**:
+- Test name describes behavior clearly
+- Test is isolated (no dependencies on other tests)
+- Failure message is clear and actionable
+- Only ONE test at a time
+
+---
+
+### Green Phase (Make It Pass)
+
+```
+1. Write MINIMUM code to make the failing test pass
+2. Hardcode values if that makes it pass
+3. Use the simplest solution that could possibly work
+4. Run tests to confirm they pass
+5. Do NOT add extra functionality "just in case"
+```
+
+**Requirements**:
+- All tests pass (100% green)
+- No compiler/linter warnings
+- Code does exactly what test requires, nothing more
+
+---
+
+### Refactor Phase (Improve Structure)
+
+```
+1. Only refactor when tests are GREEN
+2. Identify duplication or complexity
+3. Make ONE structural change at a time
+4. Run tests after EACH change
+5. If tests fail, revert immediately
+```
+
+**Refactoring Types** (Tidy First):
+- Extract method
+- Rename variable/function
+- Move code to better location
+- Remove duplication
+- Simplify conditionals
+
+**CRITICAL**: Never mix refactoring with new functionality
+
+---
+
+## 💻 COMMIT DISCIPLINE
+
+### Two Commit Types
+
+**1. Structural Changes** (Tidy First):
+```
+[Refactor] Extract validation logic to separate function
+
+- Moved validation from createUser to validateUserInput
+- No behavior change
+- All tests pass before and after
+```
+
+**2. Behavioral Changes** (Features/Fixes):
+```
+[Feature] Add user creation with email validation
+
+- Test: shouldRejectInvalidEmail
+- Implement: User.create() validates email format
+- All tests pass
+```
+
+### Commit Rules
+
+- ✅ Commit only when ALL tests pass
+- ✅ Commit only when NO compiler/linter warnings
+- ✅ Commit represents single logical unit
+- ✅ Clearly state commit type (Structural or Behavioral)
+- ❌ NEVER mix structural and behavioral changes
+
+---
+
+## 🚫 WARNING SIGNS (Stop Immediately)
+
+### 1. Loops
+
+AI is stuck repeating the same mistakes:
+```
+→ STOP
+→ Review what went wrong
+→ Simplify the test or implementation approach
+→ Start fresh with clearer direction
+```
+
+### 2. Functionality You Didn't Ask For
+
+AI implements features beyond current test:
+```
+→ STOP
+→ Remove extra functionality
+→ Focus only on making current test pass
+→ Extra features come later with their own tests
+```
+
+### 3. Cheating
+
+AI disables, deletes, or modifies tests to make them pass:
+```
+→ STOP IMMEDIATELY
+→ Revert changes
+→ Fix implementation, never fix tests (unless test is wrong)
+→ Tests are the specification
+```
+
+---
+
+## 🎯 WORKFLOW: "go" Command Pattern
+
+When user says "go":
+
+```
+1. Find next unmarked test in plan.md or tasks.md
+2. Write ONLY that test (Red phase)
+3. Verify test FAILS
+4. Report: "Test written and failing: {test_name}"
+5. Wait for next "go"
+
+6. Implement MINIMUM code to pass (Green phase)
+7. Run all tests
+8. Report: "Test passing: {test_name}"
+9. Wait for next "go"
+
+10. Look for refactoring opportunities (Refactor phase)
+11. If found: Make ONE structural change
+12. Run tests after change
+13. Report: "Refactored: {what_changed}"
+14. Wait for next "go" or proceed to next test
+```
+
+---
+
+## 📝 CODE QUALITY STANDARDS
+
+### Eliminate Duplication
+
+- Same logic in multiple places → Extract to function
+- Similar patterns → Abstract to common implementation
+- Copy-paste code → RED FLAG, must refactor
+
+### Express Intent Clearly
+
+- Function names describe what they do
+- Variable names describe what they hold
+- No cryptic abbreviations
+- Comments explain "why", not "what"
+
+### Make Dependencies Explicit
+
+- No hidden global state
+- Dependencies passed as parameters
+- Side effects clearly documented
+
+### Keep Methods Small
+
+- One responsibility per function
+- Ideally < 10 lines
+- If longer, consider extracting sub-functions
+
+### Minimize State and Side Effects
+
+- Prefer pure functions
+- State changes clearly marked
+- Side effects isolated and documented
+
+---
+
+## 🔧 LANGUAGE-SPECIFIC GUIDANCE
+
+### Rust
+
+- Prefer functional style over imperative
+- Use `Option` and `Result` combinators (`map`, `and_then`, `unwrap_or`)
+- Avoid explicit pattern matching when combinators work
+- Ownership model guides structural decisions
+
+**Example**:
+```rust
+// ❌ Imperative
+if let Some(value) = option {
+    process(value)
+} else {
+    default()
+}
+
+// ✅ Functional
+option.map_or_else(|| default(), |v| process(v))
+```
+
+### Python
+
+- Use type hints consistently
+- Prefer comprehensions over loops
+- Use dataclasses for simple data structures
+- Follow PEP 8 strictly
+
+### TypeScript/JavaScript
+
+- Use const by default
+- Prefer functional array methods
+- Type everything (no `any`)
+- Immutability preferred
+
+---
+
+## 📊 TEST COVERAGE REQUIREMENTS
+
+- **Target**: 80%+ coverage (measured by coverage tool)
+- **Critical paths**: 100% coverage
+- **Edge cases**: Must be tested explicitly
+- **Happy path**: Not enough, test failures too
+
+---
+
+## 🎓 EXAMPLE TDD SESSION
+
+### Iteration 1: Red
+
+```
+User: "go"
+
+AI: "Writing test for User.create()..."
+
+test_user_creation.py:
+```python
+def test_should_create_user_with_valid_email():
+    user = User.create(email="test@example.com", name="Test")
+    assert user.email == "test@example.com"
+    assert user.name == "Test"
+```
+
+Running tests... ❌ FAILED
+- NameError: name 'User' is not defined
+
+Test written and failing. Say "go" to implement.
+```
+
+### Iteration 2: Green
+
+```
+User: "go"
+
+AI: "Implementing User.create()..."
+
+user.py:
+```python
+class User:
+    def __init__(self, email: str, name: str):
+        self.email = email
+        self.name = name
+    
+    @classmethod
+    def create(cls, email: str, name: str):
+        return cls(email=email, name=name)
+```
+
+Running tests... ✅ PASSED
+
+Test passing. Say "go" to refactor or move to next test.
+```
+
+### Iteration 3: Refactor (Structural)
+
+```
+User: "go"
+
+AI: "Looking for refactoring opportunities..."
+
+Found: email and name are duplicated in __init__ signature
+Refactoring: Use dataclass
+
+user.py:
+```python
+from dataclasses import dataclass
+
+@dataclass
+class User:
+    email: str
+    name: str
+    
+    @classmethod
+    def create(cls, email: str, name: str):
+        return cls(email=email, name=name)
+```
+
+Running tests... ✅ PASSED
+
+Refactored: Converted to dataclass. Ready for next test. Say "go".
+```
+
+---
+
+## 🚨 ANTI-PATTERNS TO AVOID
+
+### ❌ Writing Multiple Tests at Once
+
+```python
+# ❌ BAD
+def test_create_user(): ...
+def test_update_user(): ...
+def test_delete_user(): ...
+# All written before any implementation
+```
+
+```python
+# ✅ GOOD
+def test_create_user(): ...
+# Implement create
+# THEN write next test
+```
+
+### ❌ Implementing Before Test
+
+```python
+# ❌ BAD: Code first, test later
+class User:
+    def create(self): ...
+    def update(self): ...
+    
+# Now writing tests...
+```
+
+```python
+# ✅ GOOD: Test first, then code
+def test_create_user(): ...
+# Write test FIRST
+
+class User:
+    def create(self): ...
+# Then implement
+```
+
+### ❌ Over-Implementation
+
+```python
+# ❌ BAD: Test requires create, AI implements CRUD
+def test_create_user(): ...
+
+class User:
+    def create(self): ...
+    def read(self): ...    # Not tested yet!
+    def update(self): ... # Not tested yet!
+    def delete(self): ... # Not tested yet!
+```
+
+```python
+# ✅ GOOD: Only what's tested
+def test_create_user(): ...
+
+class User:
+    def create(self): ...
+# Other methods come with their own tests
+```
+
+---
+
+## 📖 REFACTORING CATALOG
+
+Common refactorings to apply in Refactor phase:
+
+### Extract Function
+Before: Long method with multiple responsibilities
+After: Small methods with single responsibility
+
+### Rename
+Before: Cryptic names (`calc`, `tmp`, `data`)
+After: Meaningful names (`calculateTotal`, `temporaryUser`, `userData`)
+
+### Remove Duplication
+Before: Same code in multiple places
+After: Extracted to shared function
+
+### Simplify Conditional
+Before: Nested if-else chains
+After: Guard clauses or polymorphism
+
+### Move Method
+Before: Method in wrong class
+After: Method in appropriate class
+
+---
+
+## 🎯 SUCCESS CRITERIA
+
+Development is successful when:
+
+- ✅ All tests pass (100% green)
+- ✅ Test coverage ≥ 80%
+- ✅ No compiler/linter warnings
+- ✅ Code is simple and clear
+- ✅ Duplication eliminated
+- ✅ Each function has single responsibility
+- ✅ Structural and behavioral commits separated
+
+---
+
+## 💡 REMEMBER
+
+> "Make it work, make it right, make it fast - in that order"
+> - Kent Beck
+
+> "The code you write today should be easy to change tomorrow"
+> - Tidy First
+
+> "Test-driven development is a way of managing fear during programming"
+> - Kent Beck
+
+---
+
+**Last Updated**: 2025-11-17  
+**Version**: 1.0  
+**Based on**: Kent Beck's Augmented Coding methodology  
+**Reference**: [Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)

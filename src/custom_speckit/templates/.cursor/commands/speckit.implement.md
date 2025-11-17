@@ -28,6 +28,40 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 **Consistency Rule**: Comments match tasks.md language, code stays in English.
 
+## TDD Workflow (Kent Beck's Augmented Coding)
+
+**CRITICAL**: This command follows Test-Driven Development by default.
+
+**Reference**: `.cursor/rules/tdd-augmented-coding.mdc` - Full TDD methodology
+
+**Core Cycle**: Red → Green → Refactor
+
+### TDD Execution Flow
+
+1. **Red Phase**: Write ONE failing test
+   - Pick next unmarked task from tasks.md
+   - Write test that defines expected behavior
+   - Verify test FAILS for the right reason
+   - Do NOT implement yet
+
+2. **Green Phase**: Make test pass with minimum code
+   - Write simplest code to make test pass
+   - Hardcode values if needed
+   - Run all tests to verify GREEN
+   - Do NOT add extra features
+
+3. **Refactor Phase**: Improve structure (optional)
+   - Look for duplication or complexity
+   - Make ONE structural change at a time
+   - Run tests after each change
+   - Commit structural changes separately
+
+4. **Commit**: Separate commits for structural vs behavioral changes
+   - Structural: `[Refactor] description`
+   - Behavioral: `[Feature] description` or `[Fix] description`
+
+**"go" Command Pattern**: User says "go" to proceed to next phase or next test.
+
 ## Outline
 
 1. Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
