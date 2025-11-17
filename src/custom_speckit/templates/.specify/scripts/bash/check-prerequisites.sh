@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Consolidated prerequisite checking script
 #
 # This script provides unified prerequisite checking for Spec-Driven Development workflow.

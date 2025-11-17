@@ -2,6 +2,9 @@
 
 set -e
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Parse command line arguments
 JSON_MODE=false
 ARGS=()

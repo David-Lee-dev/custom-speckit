@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Common functions and variables for all scripts
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Get repository root, with fallback for non-git repositories
 get_repo_root() {
     if git rev-parse --show-toplevel >/dev/null 2>&1; then

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Get project version from multiple sources
 #
 # This script attempts to determine the project version by checking:

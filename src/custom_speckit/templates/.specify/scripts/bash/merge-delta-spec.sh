@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Merge delta specification into main spec
 #
 # This script prepares paths and validates prerequisites for delta merging.

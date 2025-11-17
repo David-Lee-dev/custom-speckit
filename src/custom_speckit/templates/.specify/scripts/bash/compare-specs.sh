@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Unset CDPATH to prevent issues with cd command when calculating script directory
+unset CDPATH
+
 # Compare current spec with new requirements to determine if delta is needed
 #
 # This script checks if an existing spec exists and provides information
